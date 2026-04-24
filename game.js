@@ -1,3 +1,21 @@
+class Scene1 extends AdventureScene {
+    constructor() {
+        super("scene1");
+    }
+
+    preload() {
+        const sceneInfo = this.cache.json.get('scene1');
+        for (let i of sceneInfo.Objects) {
+            if (i.Type === "image") {
+                this.load.image(i.Name, i.filePath);
+            }
+        }
+    }
+
+    onEnter() {}
+
+}
+
 class Demo1 extends AdventureScene {
     constructor() {
         super("demo1", "First Room");

@@ -1,0 +1,33 @@
+{
+    "Scenes": [
+        {
+            "Scene1":
+            {
+                "sceneText": "This is xyz.",
+                "Objects": [
+                    {
+                        "Name": "ExampleObject",
+                        "Type": "image",
+                        "filePath": "assets/example.png",
+                        "Position": [0, 0],
+                        "Rotation": [0, 0],
+                        "Scale": 1,
+                        "Actions": [
+                            {
+                                "Trigger": "onClick",
+                                "Type": "changeScene",
+                                "TargetScene": "Scene2",
+                                "associatedText": "Clicking this object will take you to Scene2."
+                            },
+                            {
+                                "Trigger": "onHover",
+                                "Type": "showHoverText",
+                                "associatedText": "This is an example object."
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
