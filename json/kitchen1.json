@@ -1,0 +1,25 @@
+{
+    "Kitchen1":
+    {
+        "Objects": [
+            {
+                "Name": "FridgeBottom",
+                "Type": "image",
+                "filePath": "/assets/Fridge_Bottom.png",
+                "Position": [300, 300],
+                "Scale": 10,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Open fridge?"
+                    },
+                    {
+                        "Type": "changeScene",
+                        "targetScene": "Fridge",
+                        "associatedText": "You open the fridge"
+                    }
+                ]
+            }
+        ]
+    }
+}

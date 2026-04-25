@@ -30,9 +30,22 @@ class AdventureScene extends Phaser.Scene {
      * @param {string} key  A unique Phaser scene key (e.g. `"tunnel"`).
      * @param {string} name A human-readable name shown in the UI (e.g. `"The Tunnel"`).
      */
-    constructor(key, name) {
+    constructor(key, name, sceneJSON) {
         super(key);
+        this.sceneKey = key;
         this.name = name;
+        this.sceneJSON = sceneJSON;
+        this.currentSceneData = null;
+        this.sceneObjects = [];
+    }
+
+    preload() {
+        if (this.sceneJSON) {
+            this.load.json(this.sceneKey, this.sceneJSON);
+        }
+        else {
+            console.log("No sceneJSON provided, ruh roh");
+        }
     }
 
     /**
@@ -54,6 +67,121 @@ class AdventureScene extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#444');
         this.cameras.main.fadeIn(this.transitionDuration, 0, 0, 0);
 
+        this.setupUI();
+        
+        if (this.sceneJSON) {
+            this.preloadSceneAssets();
+        }
+
+        this.onEnter();
+
+    }
+
+    preloadSceneAssets() {
+        const jsonData = this.cache.json.get(this.sceneKey);
+        this.currentSceneData = new SceneData(jsonData);
+        let imagesToLoad = 0;
+        // load all image assests. If you want to load other things later on, you gotta add other types to this
+        this.currentSceneData.objects?.forEach(objectData => {
+            if (objectData.Type === "image") {
+                imagesToLoad++;
+                try {
+                    this.load.image(objectData.Name, objectData.filePath);
+                }
+                catch(error) {
+                    console.log('Invalid filepath: ${objectData.filePath}')
+                }
+            };
+        })
+
+        // just in case a scene has no images to load
+        if (imagesToLoad > 0) {
+            // need to make sure assets are done loading before creating objects
+            this.load.once('complete', () => {
+                this.createObjectsFromData();
+            })
+            this.load.start();
+        }
+        else {
+            this.createObjectsFromData();
+        }
+    }
+
+    // should probably just combine this with createObjectFromData, but laziness prevails
+    createObjectsFromData() {
+        this.currentSceneData.objects?.forEach(objectData => {
+            this.createObjectFromData(objectData);
+        });
+    }
+
+    createObjectFromData(objectData) {
+        let gameObject = null;
+        if (objectData.Type == "image") {
+            gameObject = this.createImageObject(objectData);
+        }
+        else {
+            console.log('Only image objects are supported currently, either implement new object types, or change the object to an image:  ${objectData.Type}');
+        }
+
+        if (gameObject) {
+            objectData.Actions?.forEach(actionData => {
+                const action = new ActionData(actionData);
+                this.setupObjectAction(gameObject, action);
+            })
+        }
+
+    }
+
+    createImageObject(objectData) {
+        const obj  = this.add.image(
+            objectData.Position[0],
+            objectData.Position[1],
+            objectData.Name
+        ).setScale(objectData.Scale);
+
+        return obj;
+    }
+
+    setupObjectAction(gameObject, action) {
+        switch(action.actionType) {
+            case "showHoverText":
+                if (!gameObject.input) {
+                    gameObject.setInteractive();
+                }
+                gameObject.on('pointerover', () => {
+                    this.showMessage(action.actionAssociatedText);
+                })
+            break;
+
+            case "changeScene":
+                gameObject.setInteractive( { useHandCursor: true } );
+                gameObject.on('pointerdown', () => {
+                    this.gotoScene(action.actionTargetScene);
+                })
+            break;
+
+            case "giveItemDeleteObject":
+                gameObject.setInteractive( { useHandCursor: true } );
+                gameObject.on('pointerdown', () => {
+                    this.gainItem(action.actionItemName);
+
+                    // visual feedback tween, destroys the item on complete
+                    this.tweens.add({
+                        targets: gameObject,
+                        alpha: 0,
+                        scale: 0,
+                        duration: 300,
+                        onComplete: () => {
+                            gameObject.destroy();
+                        }
+                    })
+                })
+            break;
+        }
+    }
+
+    // moved old code down here so Create() doesn't look so messy
+    setupUI() {
         this.add.rectangle(this.w * 0.75, 0, this.w * 0.25, this.h).setOrigin(0, 0).setFillStyle(0);
         this.add.text(this.w * 0.75 + this.s, this.s)
             .setText(this.name)
@@ -83,9 +211,6 @@ class AdventureScene extends Phaser.Scene {
                     this.scale.startFullscreen();
                 }
             });
-
-        this.onEnter();
-
     }
 
     /**
@@ -228,6 +353,56 @@ class AdventureScene extends Phaser.Scene {
      * }
      */
     onEnter() {
-        console.warn('This AdventureScene did not implement onEnter():', this.constructor.name);
+        
+    }
+}
+
+
+class SceneData {
+    constructor(data = {}) {
+        try {
+            // set sceneKey to the first key name in scenes.json
+            this.sceneKey = Object.keys(data)[0];
+
+            const sceneContent = data[this.sceneKey];
+            this.objects = sceneContent.Objects;
+        }
+        catch(error) {
+            console.log("Error creating scene data, bro did not correctly format his json", error);
+        }
+    }
+}
+
+class ObjectData {
+    constructor(data = {}) {
+        try {
+            this.objectName = data.Name;
+            this.objectType = data.Type;
+            this.assetFilePath = data.filePath;
+            this.objectPosition = data.Position;
+            this.objectScale = data.Scale;
+            this.objectActions = data.Actions;
+        }
+        catch(error) {
+            console.log("Error creating object data, bro did not correctly format his json", error);
+        }
+    }
+}
+
+class ActionData {
+    constructor(data = {}) {
+        try {
+            this.actionType = data.Type;
+            if (this.actionType === "changeScene") {
+                this.actionTargetScene = data.targetScene;
+            }
+            if (this.actionType === "giveItemDeleteObject") {
+                this.actionItemName = data.itemName;
+            }
+            this.actionAssociatedText = data.associatedText;
+        }
+        catch(error) {
+            console.log("Error creating action data, bro did not correctly format his json", error);
+        }
     }
 }
