@@ -6,7 +6,7 @@
                 "Name": "FridgeBottom",
                 "Type": "image",
                 "filePath": "/assets/Fridge_Bottom.png",
-                "Position": [300, 300],
+                "Position": [1000, 600],
                 "Scale": 10,
                 "Actions": [
                     {
@@ -17,6 +17,23 @@
                         "Type": "changeScene",
                         "targetScene": "Fridge",
                         "associatedText": "You open the fridge"
+                    }
+                ]
+            },
+            {
+                "Name": "FridgeBottom",
+                "Type": "image",
+                "filePath": "/assets/Fridge_Bottom.png",
+                "Position": [1000, 275],
+                "Scale": 10,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "No reason to open the freezer, you don't have enough time to unthaw the food in there"
+                    },
+                    {
+                        "Type": "noClick",
+                        "associatedText": "No reason to open the freezer, you don't have enough time to unthaw the food in there"
                     }
                 ]
             }

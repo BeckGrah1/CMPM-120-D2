@@ -177,6 +177,29 @@ class AdventureScene extends Phaser.Scene {
                     })
                 })
             break;
+
+            case "noClick":
+                if (!gameObject.input) {
+                    gameObject.setInteractive();
+                }
+                gameObject.canClick = true;
+                gameObject.on('pointerdown', () => {
+                    if (gameObject.canClick == true) {
+                        this.tweens.add({
+                            targets: gameObject,
+                            x: '+=' + this.s,
+                            repeat: 2,
+                            yoyo: true,
+                            ease: 'Sine.inOut',
+                            duration: 100
+                        });
+                        this.showMessage(action.actionAssociatedText);
+                        gameObject.canClick = false;
+                        this.time.delayedCall(600, () => {
+                            gameObject.canClick = true;
+                        })
+                    }
+                })
         }
     }
 
