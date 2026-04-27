@@ -37,6 +37,7 @@ class AdventureScene extends Phaser.Scene {
         this.sceneJSON = sceneJSON;
         this.currentSceneData = null;
         this.sceneObjects = [];
+        this.holdIndicator = null;
     }
 
     preload() {
@@ -108,6 +109,18 @@ class AdventureScene extends Phaser.Scene {
         else {
             this.createObjectsFromData();
         }
+
+        // preload cursor sprites
+        this.load.spritesheet('holdIndicator', '/assets/mouse_load_spritesheet.png', { frameWidth: 9, frameHeight: 9 });
+    }
+
+    update() {
+        if (this.mouseLoadActive) {
+            if (this.holdIndicator) {
+                const pointer = this.input.activePointer;
+                this.holdIndicator.setPosition(pointer.worldX, pointer.worldY);
+            }
+        }
     }
 
     // should probably just combine this with createObjectFromData, but laziness prevails
@@ -141,7 +154,7 @@ class AdventureScene extends Phaser.Scene {
             objectData.Position[1],
             objectData.Name + objectData.State
         ).setScale(objectData.Scale).setRotation(Phaser.Math.DegToRad(objectData.Rotation));
-        this.enableClickAndHold(obj, 500);
+        this.enableClickAndHold(obj);
         return obj;
     }
 
@@ -391,6 +404,11 @@ class AdventureScene extends Phaser.Scene {
             break;
 
             case "giveItemOnHold":
+                gameObject.on('pointerdown', () => {
+                    this.game.canvas.style.cursor = 'none';
+                    this.holdIndicator = this.add.sprite(0, 0, 'holdIndicator');
+                })
+
                 gameObject.on('longpress', () => {
                     // Check neededFlags
                     if (action.neededFlags) {
@@ -420,13 +438,21 @@ class AdventureScene extends Phaser.Scene {
                     
                 })
 
+                gameObject.on('pointerup', () => {
+                    if (this.holdIndicator) {
+                        this.holdIndicator = null;
+                        this.game.canvas.style.cursor = 'auto';
+                    }
+                })
+
         }
     }
 
-    enableClickAndHold(gameObject, holdDuration = 500) {
+    enableClickAndHold(gameObject) {
         let pressTimer;
         let isLongPress = false;
         let isDestroyed = false;
+        let holdDuration = 500;
 
         gameObject.on('pointerdown', () => {
             isLongPress = false;

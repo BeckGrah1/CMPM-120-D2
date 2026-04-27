@@ -21,7 +21,7 @@
                 ]
             },
             {
-                "Name": "FridgeBottom",
+                "Name": "FridgeTop",
                 "Type": "image",
                 "filePath": ["/assets/Fridge_Bottom.png"],
                 "State": 0,
@@ -108,11 +108,27 @@
                 ]
             },
             {
+                "Name": "Stovetop",
+                "Type": "image",
+                "filePath": ["/assets/stovetop.png"],
+                "State": 0,
+                "Position": [420, 300],
+                "Scale": 10,
+                "Flags": {},
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Surprisingly, none of your roomates left the burners on",
+                        "neededState": 0
+                    }
+                ]
+            },
+            {
                 "Name": "Oven",
                 "Type": "image",
                 "filePath": ["/assets/oven.png", "/assets/oven_open.png"],
                 "State": 0,
-                "Position": [670, 610],
+                "Position": [420, 610],
                 "Scale": 10,
                 "Flags": { "trayTaken": false},
                 "Actions": [
@@ -161,6 +177,44 @@
                         "Item": "dirty tray",
                         "deleteGameObject": false,
                         "associatedText": "You take the tray"
+                    }
+                ]
+            },
+            {
+                "Name": "kitchenCabinet1",
+                "Type": "image",
+                "filePath": ["/assets/kitchen_cabinet.png"],
+                "Position": [130, 610],
+                "Scale": 10,
+                "State": 0,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone",
+                        "neededState": 0
+                    },
+                    {
+                        "Type": "noClick",
+                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone"
+                    }
+                ]
+            },
+            {
+                "Name": "kitchenCabinet2",
+                "Type": "image",
+                "filePath": ["/assets/kitchen_cabinet.png"],
+                "Position": [710, 610],
+                "Scale": 10,
+                "State": 0,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone",
+                        "neededState": 0
+                    },
+                    {
+                        "Type": "noClick",
+                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone"
                     }
                 ]
             }
