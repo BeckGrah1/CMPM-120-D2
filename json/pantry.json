@@ -1,5 +1,5 @@
 {
-    "Fridge": 
+    "Pantry": 
     {
         "Objects": [
             {
@@ -12,7 +12,7 @@
                 "Actions": [
                     {
                         "Type": "showHoverText",
-                        "associatedText": ["Close fridge?"]
+                        "associatedText": ["Go back?"]
                     },
                     {
                         "Type": "moveOnAxisHover",
@@ -21,7 +21,7 @@
                     {
                         "Type": "changeScene",
                         "targetScene": "Kitchen1",
-                        "associatedText": ["You close the fridge"]
+                        "associatedText": ["You head back to the kitchen"]
                     }
                 ]
             }

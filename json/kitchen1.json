@@ -5,7 +5,7 @@
             {
                 "Name": "FridgeBottom",
                 "Type": "image",
-                "filePath": "/assets/Fridge_Bottom.png",
+                "filePath": ["/assets/Fridge_Bottom.png"],
                 "Position": [1000, 600],
                 "Scale": 10,
                 "Actions": [
@@ -23,8 +23,10 @@
             {
                 "Name": "FridgeBottom",
                 "Type": "image",
-                "filePath": "/assets/Fridge_Bottom.png",
+                "filePath": ["/assets/Fridge_Bottom.png"],
+                "State": 0,
                 "Position": [1000, 275],
+                "Rotation": 0,
                 "Scale": 10,
                 "Actions": [
                     {
@@ -34,6 +36,131 @@
                     {
                         "Type": "noClick",
                         "associatedText": "No reason to open the freezer, you don't have enough time to unthaw the food in there"
+                    }
+                ]
+            },
+            {
+                "Name": "ArrowBedroom",
+                "Type": "image",
+                "filePath": ["/assets/arrow.png"],
+                "Position": [1300, 300],
+                "Scale": 8,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Go to your room?"
+                    },
+                    {
+                        "Type": "moveOnAxisHover",
+                        "Axis": "y"
+                    },
+                    {
+                        "Type": "changeScene",
+                        "targetScene": "Bedroom",
+                        "associatedText": "You open the fridge"
+                    }
+                ]
+            },
+            {
+                "Name": "ArrowKitchen2",
+                "Type": "image",
+                "filePath": ["/assets/arrow_small.png"],
+                "Position": [760, 900],
+                "Rotation": 180,
+                "Scale": 8,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Turn around?"
+                    },
+                    {
+                        "Type": "moveOnAxisHover",
+                        "Axis": "-y"
+                    },
+                    {
+                        "Type": "changeScene",
+                        "targetScene": "Kitchen2",
+                        "associatedText": "You turn around"
+                    }
+                ]
+            },
+            {
+                "Name": "ArrowPantry",
+                "Type": "image",
+                "filePath": ["/assets/arrow_small.png"],
+                "Position": [1300, 600],
+                "Rotation": 90,
+                "Scale": 8,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Go to the pantry?"
+                    },
+                    {
+                        "Type": "moveOnAxisHover",
+                        "Axis": "x"
+                    },
+                    {
+                        "Type": "changeScene",
+                        "targetScene": "Pantry",
+                        "associatedText": "You walk to the pantry"
+                    }
+                ]
+            },
+            {
+                "Name": "Oven",
+                "Type": "image",
+                "filePath": ["/assets/oven.png", "/assets/oven_open.png"],
+                "State": 0,
+                "Position": [670, 610],
+                "Scale": 10,
+                "Flags": { "trayTaken": false},
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Open the oven?",
+                        "neededState": 0
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Your roommate left a baking tray in here. \n\nTake it? (hold)",
+                        "neededFlags": {"trayTaken": false},
+                        "neededState": 1
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "An empty oven",
+                        "neededFlags": {"trayTaken": true},
+                        "neededState": 1
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 0,
+                        "neededFlags": { "trayTaken": false},
+                        "newState": 1,
+                        "associatedText": "you opened the oven, your roommate left a cooking tray in here \n\nTake the cooking tray?"
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 0,
+                        "neededFlags": { "trayTaken": true},
+                        "newState": 1,
+                        "associatedText": "An empty oven"
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 1,
+                        "newState": 0,
+                        "associatedText": "You closed the oven"
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 1,
+                        "neededFlags": { "trayTaken": false},
+                        "setFlag": {"trayTaken": true},
+                        "Item": "dirty tray",
+                        "deleteGameObject": false,
+                        "associatedText": "You take the tray"
                     }
                 ]
             }

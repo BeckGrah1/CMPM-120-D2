@@ -86,7 +86,10 @@ class AdventureScene extends Phaser.Scene {
             if (objectData.Type === "image") {
                 imagesToLoad++;
                 try {
-                    this.load.image(objectData.Name, objectData.filePath);
+                    objectData.filePath.forEach((element, index) => {
+                        let uniqueKey = objectData.Name + index
+                       this.load.image(uniqueKey, element); 
+                    });
                 }
                 catch(error) {
                     console.log('Invalid filepath: ${objectData.filePath}')
@@ -118,14 +121,14 @@ class AdventureScene extends Phaser.Scene {
         let gameObject = null;
         if (objectData.Type == "image") {
             gameObject = this.createImageObject(objectData);
+            gameObject.objData = objectData;
         }
         else {
             console.log('Only image objects are supported currently, either implement new object types, or change the object to an image:  ${objectData.Type}');
         }
 
         if (gameObject) {
-            objectData.Actions?.forEach(actionData => {
-                const action = new ActionData(actionData);
+            objectData.Actions?.forEach(action => {
                 this.setupObjectAction(gameObject, action);
             })
         }
@@ -136,9 +139,9 @@ class AdventureScene extends Phaser.Scene {
         const obj  = this.add.image(
             objectData.Position[0],
             objectData.Position[1],
-            objectData.Name
-        ).setScale(objectData.Scale);
-
+            objectData.Name + objectData.State
+        ).setScale(objectData.Scale).setRotation(Phaser.Math.DegToRad(objectData.Rotation));
+        this.enableClickAndHold(obj, 500);
         return obj;
     }
 
@@ -149,32 +152,87 @@ class AdventureScene extends Phaser.Scene {
                     gameObject.setInteractive();
                 }
                 gameObject.on('pointerover', () => {
-                    this.showMessage(action.actionAssociatedText);
+                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
+
+                        if (action.neededFlags) {
+                            let ok = true;
+                            for (let flag in action.neededFlags) {
+                                if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                            if (!ok) return;
+                        }
+
+                        this.showMessage(action.actionAssociatedText);
+
+                        if (action.setFlag) {
+                            Object.assign(gameObject.objData.Flags, action.setFlag);
+                        }
+                    }
                 })
             break;
 
             case "changeScene":
                 gameObject.setInteractive( { useHandCursor: true } );
-                gameObject.on('pointerdown', () => {
-                    this.gotoScene(action.actionTargetScene);
+                gameObject.on('shortclick', () => {
+                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
+
+                        if (action.neededFlags) {
+                            let ok = true;
+                            for (let flag in action.neededFlags) {
+                                if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                            if (!ok) return;
+                        }
+
+                        this.showMessage(action.actionAssociatedText);
+                        this.gotoScene(action.actionTargetScene);
+
+                        if (action.setFlag) {
+                            Object.assign(gameObject.objData.Flags, action.setFlag);
+                        }
+                    }
                 })
             break;
 
             case "giveItemDeleteObject":
                 gameObject.setInteractive( { useHandCursor: true } );
-                gameObject.on('pointerdown', () => {
-                    this.gainItem(action.actionItemName);
+                gameObject.on('shortclick', () => {
+                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
 
-                    // visual feedback tween, destroys the item on complete
-                    this.tweens.add({
-                        targets: gameObject,
-                        alpha: 0,
-                        scale: 0,
-                        duration: 300,
-                        onComplete: () => {
-                            gameObject.destroy();
+                        if (action.neededFlags) {
+                            let ok = true;
+                            for (let flag in action.neededFlags) {
+                                if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                            if (!ok) return;
                         }
-                    })
+
+                        this.gainItem(action.actionItemName);
+
+                        // visual feedback tween, destroys the item on complete
+                        this.tweens.add({
+                            targets: gameObject,
+                            alpha: 0,
+                            scale: 0,
+                            duration: 300,
+                            onComplete: () => {
+                                gameObject.destroy();
+                            }
+                        })
+
+                        if (action.setFlag) {
+                            Object.assign(gameObject.objData.Flags, action.setFlag);
+                        }
+                    }
                 })
             break;
 
@@ -183,24 +241,221 @@ class AdventureScene extends Phaser.Scene {
                     gameObject.setInteractive();
                 }
                 gameObject.canClick = true;
-                gameObject.on('pointerdown', () => {
-                    if (gameObject.canClick == true) {
-                        this.tweens.add({
-                            targets: gameObject,
-                            x: '+=' + this.s,
-                            repeat: 2,
-                            yoyo: true,
-                            ease: 'Sine.inOut',
-                            duration: 100
-                        });
-                        this.showMessage(action.actionAssociatedText);
-                        gameObject.canClick = false;
-                        this.time.delayedCall(600, () => {
-                            gameObject.canClick = true;
-                        })
+                gameObject.on('shortclick', () => {
+
+                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
+                        
+                        if (action.neededFlags) {
+                                let ok = true;
+                                for (let flag in action.neededFlags) {
+                                    if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                                if (!ok) return;
+                            }
+
+                        if (gameObject.canClick == true) {
+                            this.tweens.add({
+                                targets: gameObject,
+                                x: '+=' + this.s,
+                                repeat: 2,
+                                yoyo: true,
+                                ease: 'Sine.inOut',
+                                duration: 100
+                            });
+                            this.showMessage(action.actionAssociatedText);
+                            gameObject.canClick = false;
+                            this.time.delayedCall(600, () => {
+                                gameObject.canClick = true;
+                            })
+                        }
                     }
                 })
+            break;
+
+            case "moveOnAxisHover":
+                if (!gameObject.input) {
+                    gameObject.setInteractive();
+                }
+                gameObject.originalPosition = [gameObject.x, gameObject.y];
+                gameObject.on('pointerover', () => {
+                        if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
+                            // Check neededFlags
+                            if (action.neededFlags) {
+                                let ok = true;
+                                for (let flag in action.neededFlags) {
+                                    if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                                if (!ok) return;
+                            }
+
+                            if (action.axis === "y") {
+                                this.arrowTween = this.tweens.add({
+                                    targets: gameObject,
+                                    y: '-=' + this.s,
+                                    repeat: -1,
+                                    yoyo: true,
+                                    ease: 'Sine.inOut',
+                                    duration: 300
+                                });
+                            }
+                            else if (action.axis === "-y") {
+                                this.arrowTween = this.tweens.add({
+                                    targets: gameObject,
+                                    y: '+=' + this.s,
+                                    repeat: -1,
+                                    yoyo: true,
+                                    ease: 'Sine.inOut',
+                                    duration: 300
+                                });
+                            }
+                            else if (action.axis === "x") {
+                                this.arrowTween = this.tweens.add({
+                                    targets: gameObject,
+                                    x: '+=' + this.s,
+                                    repeat: -1,
+                                    yoyo: true,
+                                    ease: 'Sine.inOut',
+                                    duration: 300
+                                });
+                            }
+                            else if (action.axis === "-x") {
+                                this.arrowTween = this.tweens.add({
+                                    targets: gameObject,
+                                    x: '-=' + this.s,
+                                    repeat: -1,
+                                    yoyo: true,
+                                    ease: 'Sine.inOut',
+                                    duration: 300
+                                });
+                            }
+                            else {
+                                console.log("Axis not found: ", action.axis, " on action: ", gameObject)
+                            }
+                        }
+                    })
+                
+                    gameObject.on('pointerout', () => {
+                        this.arrowTween.stop();
+                        this.tweens.add({
+                            targets: gameObject,
+                            x: gameObject.originalPosition[0],
+                            y: gameObject.originalPosition[1],
+                            ease: 'Sine.inOut',
+                            duration: 300
+                        });
+                    })
+            break;
+
+            case "changeStateOnClick":
+                gameObject.on('shortclick', () => {
+                    // Check neededFlags
+                    if (action.neededFlags) {
+                        let ok = true;
+                        for (let flag in action.neededFlags) {
+                            if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        if (!ok) return;
+                    }
+                    
+                    if (gameObject.objData.State == action.actionNeededState || action.actionNeededState == -1) {
+                        if (gameObject.processingClick) return;
+                        gameObject.processingClick = true;
+                        gameObject.objData.State = action.actionNewState;
+
+                        // only change sprite if the object has the needed texture in its filePath array
+                        if (gameObject.objData.filePath.length - 1 >= action.actionNewState) {
+                            gameObject.setTexture(gameObject.objData.Name + action.actionNewState);
+                        }
+
+                        if (action.actionAssociatedText) {
+                            this.showMessage(action.actionAssociatedText);
+                        }
+
+                        if (action.setFlag) {
+                            Object.assign(gameObject.objData.Flags, action.setFlag);
+                        }
+                        this.time.delayedCall(100, () => {
+                        gameObject.processingClick = false;
+                    })
+                    }
+                })
+            break;
+
+            case "giveItemOnHold":
+                gameObject.on('longpress', () => {
+                    // Check neededFlags
+                    if (action.neededFlags) {
+                        let ok = true;
+                        for (let flag in action.neededFlags) {
+                            if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        if (!ok) return;
+                    }
+
+                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
+                        this.gainItem(action.actionItem);
+                        action.actionAlreadyTaken = true;
+                        if (action.actionDeleteGameObject == true) {
+                            gameObject.destroy();
+                        }
+                        else if (action.setFlag) {
+                            Object.assign(gameObject.objData.Flags, action.setFlag);
+                            console.log("Flag set:", gameObject.objData.Flags);
+                        }
+
+
+                    }
+                    
+                })
+
         }
+    }
+
+    enableClickAndHold(gameObject, holdDuration = 500) {
+        let pressTimer;
+        let isLongPress = false;
+        let isDestroyed = false;
+
+        gameObject.on('pointerdown', () => {
+            isLongPress = false;
+            pressTimer = this.time.delayedCall(holdDuration, () => {
+                isLongPress = true;
+                gameObject.emit('longpress');
+                pressTimer = null;
+            });
+        });
+
+        gameObject.on('pointerup', () => {
+            if (pressTimer) {
+                // Short click (timer didn't complete)
+                pressTimer.remove();
+                pressTimer = null;
+                if (!isLongPress) {
+                    gameObject.emit('shortclick');
+                }
+            }
+            isLongPress = false;
+        });
+
+        gameObject.on('pointerout', () => {
+            if (pressTimer) {
+                pressTimer.remove();
+                pressTimer = null;
+            }
+            isLongPress = false;
+        })
     }
 
     // moved old code down here so Create() doesn't look so messy
@@ -388,7 +643,7 @@ class SceneData {
             this.sceneKey = Object.keys(data)[0];
 
             const sceneContent = data[this.sceneKey];
-            this.objects = sceneContent.Objects;
+            this.objects = sceneContent.Objects?.map(obj => new ObjectData(obj)) || [];
         }
         catch(error) {
             console.log("Error creating scene data, bro did not correctly format his json", error);
@@ -399,12 +654,15 @@ class SceneData {
 class ObjectData {
     constructor(data = {}) {
         try {
-            this.objectName = data.Name;
-            this.objectType = data.Type;
-            this.assetFilePath = data.filePath;
-            this.objectPosition = data.Position;
-            this.objectScale = data.Scale;
-            this.objectActions = data.Actions;
+            this.Name = data.Name;
+            this.Type = data.Type;
+            this.filePath = data.filePath;
+            this.Position = data.Position;
+            this.Scale = data.Scale;
+            this.Actions = data.Actions?.map(a => new ActionData(a)) || [];
+            this.Rotation = data.Rotation ?? 0;
+            this.State = data.State ?? 0;
+            this.Flags = data.Flags || {};
         }
         catch(error) {
             console.log("Error creating object data, bro did not correctly format his json", error);
@@ -422,7 +680,21 @@ class ActionData {
             if (this.actionType === "giveItemDeleteObject") {
                 this.actionItemName = data.itemName;
             }
+            if (this.actionType === "moveOnAxisHover") {
+                this.axis = data.Axis;
+            }
+            if (this.actionType === "changeStateOnClick") {
+                this.actionNewState = data.newState;
+            }
+            if (this.actionType === "giveItemOnHold") {
+                this.actionItem = data.Item;
+                this.actionNewState = data.newState;
+            }
             this.actionAssociatedText = data.associatedText;
+            this.actionNeededState = data.neededState ?? -1;
+            this.neededFlags = data.neededFlags || null;
+            this.setFlag = data.setFlag || null;
+            this.actionDeleteGameObject = data.deleteGameObject ?? false;
         }
         catch(error) {
             console.log("Error creating action data, bro did not correctly format his json", error);

@@ -1,4 +1,4 @@
-class Kitchen1 extends AdventureScene {
+class Kitchen1Scene extends AdventureScene {
     constructor() {
         super("Kitchen1", "Kitchen West", "/json/kitchen1.json");
     }
@@ -9,6 +9,25 @@ class FridgeScene extends AdventureScene {
         super("Fridge", "The Fridge", "/json/fridge.json");
     }
 }
+
+class Kitchen2Scene extends AdventureScene {
+    constructor() {
+        super("Kitchen2", "Kitchen East", "/json/kitchen2.json");
+    }
+}
+
+class BedroomScene extends AdventureScene {
+    constructor() {
+        super("Bedroom", "My room", "/json/bedroom.json");
+    }
+}
+
+class PantryScene extends AdventureScene {
+    constructor() {
+        super("Pantry", "Pantry", "/json/pantry.json");
+    }
+}
+
 class Demo1 extends AdventureScene {
     constructor() {
         super("demo1", "First Room");
@@ -135,7 +154,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Kitchen1, FridgeScene, Intro, Demo1, Demo2, Outro],
+    scene: [Kitchen1Scene, Kitchen2Scene, BedroomScene, FridgeScene, PantryScene, Intro, Demo1, Demo2, Outro],
     render: {
         pixelArt: true,
         antialias: false
