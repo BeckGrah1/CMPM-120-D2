@@ -47,6 +47,11 @@ class AdventureScene extends Phaser.Scene {
         else {
             console.log("No sceneJSON provided, ruh roh");
         }
+        // preload cursor sprites
+        this.load.spritesheet('holdIndicator', '/assets/mouse_load_spritesheet.png', { frameWidth: 9, frameHeight: 9 });
+        this.load.image('mouseHand', '/assets/mouse_hand.png');
+        this.load.image('mouse', '/assets/mouse.png');
+
     }
 
     /**
@@ -55,6 +60,8 @@ class AdventureScene extends Phaser.Scene {
      * Subclasses should override `onEnter`, not `create`.
      */
     create() {
+        this.game.canvas.style.cursor = 'none';
+
         /** @type {number} Duration in ms of scene fade-in / fade-out. */
         this.transitionDuration = 1000;
 
@@ -69,7 +76,39 @@ class AdventureScene extends Phaser.Scene {
         this.cameras.main.fadeIn(this.transitionDuration, 0, 0, 0);
 
         this.setupUI();
-        
+
+        this.mouseAnim = this.anims.create({
+            key: 'holdIndicator',
+            frames: this.anims.generateFrameNumbers('holdIndicator', { start: 0, end: 9 }),
+            frameRate: 18,
+        });
+
+         this.handCursor = this.add.sprite(0, 0, 'mouseHand').setScale(4);
+        this.handCursor.setVisible(false);
+        this.handCursor.setDepth(100);
+
+        this.mouseCursor = this.add.sprite(0, 0, 'mouse').setScale(4);
+        this.mouseCursor.setDepth(100);
+
+        this.input.on('pointerup', () => {
+            if (this.holdIndicator) {
+                this.holdIndicator.stop();
+                this.holdIndicator.destroy();
+                this.holdIndicator = null;
+                this.handCursor.setVisible(true);
+            }
+        });
+
+        this.input.on('pointerdown', () => {
+            this.tweens.add({
+                targets: [this.handCursor, this.mouseCursor],
+                scale: 3.5,
+                ease: 'sine.inout',
+                duration: 100,
+                yoyo: true
+            })
+        })
+
         if (this.sceneJSON) {
             this.preloadSceneAssets();
         }
@@ -109,17 +148,20 @@ class AdventureScene extends Phaser.Scene {
         else {
             this.createObjectsFromData();
         }
-
-        // preload cursor sprites
-        this.load.spritesheet('holdIndicator', '/assets/mouse_load_spritesheet.png', { frameWidth: 9, frameHeight: 9 });
     }
 
     update() {
-        if (this.mouseLoadActive) {
-            if (this.holdIndicator) {
-                const pointer = this.input.activePointer;
-                this.holdIndicator.setPosition(pointer.worldX, pointer.worldY);
-            }
+        if (this.holdIndicator) {
+            const pointer = this.input.activePointer;
+            this.holdIndicator.setPosition(pointer.worldX, pointer.worldY);
+        }
+        if (this.handCursor && this.handCursor.visible) {
+            const pointer = this.input.activePointer;
+            this.handCursor.setPosition(pointer.worldX, pointer.worldY);
+        }
+        else {
+            const pointer = this.input.activePointer;
+            this.mouseCursor.setPosition(pointer.worldX, pointer.worldY);
         }
     }
 
@@ -165,18 +207,7 @@ class AdventureScene extends Phaser.Scene {
                     gameObject.setInteractive();
                 }
                 gameObject.on('pointerover', () => {
-                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
-
-                        if (action.neededFlags) {
-                            let ok = true;
-                            for (let flag in action.neededFlags) {
-                                if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                            if (!ok) return;
-                        }
+                    if (this.checkStatusAndFlags(gameObject, action)) {
 
                         this.showMessage(action.actionAssociatedText);
 
@@ -188,59 +219,13 @@ class AdventureScene extends Phaser.Scene {
             break;
 
             case "changeScene":
-                gameObject.setInteractive( { useHandCursor: true } );
+                this.enableHoverCursor(gameObject);
+                gameObject.setInteractive();
                 gameObject.on('shortclick', () => {
-                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
-
-                        if (action.neededFlags) {
-                            let ok = true;
-                            for (let flag in action.neededFlags) {
-                                if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                            if (!ok) return;
-                        }
+                    if (this.checkStatusAndFlags(gameObject, action)) {
 
                         this.showMessage(action.actionAssociatedText);
                         this.gotoScene(action.actionTargetScene);
-
-                        if (action.setFlag) {
-                            Object.assign(gameObject.objData.Flags, action.setFlag);
-                        }
-                    }
-                })
-            break;
-
-            case "giveItemDeleteObject":
-                gameObject.setInteractive( { useHandCursor: true } );
-                gameObject.on('shortclick', () => {
-                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
-
-                        if (action.neededFlags) {
-                            let ok = true;
-                            for (let flag in action.neededFlags) {
-                                if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                            if (!ok) return;
-                        }
-
-                        this.gainItem(action.actionItemName);
-
-                        // visual feedback tween, destroys the item on complete
-                        this.tweens.add({
-                            targets: gameObject,
-                            alpha: 0,
-                            scale: 0,
-                            duration: 300,
-                            onComplete: () => {
-                                gameObject.destroy();
-                            }
-                        })
 
                         if (action.setFlag) {
                             Object.assign(gameObject.objData.Flags, action.setFlag);
@@ -255,19 +240,7 @@ class AdventureScene extends Phaser.Scene {
                 }
                 gameObject.canClick = true;
                 gameObject.on('shortclick', () => {
-
-                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
-                        
-                        if (action.neededFlags) {
-                                let ok = true;
-                                for (let flag in action.neededFlags) {
-                                    if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                                        ok = false;
-                                        break;
-                                    }
-                                }
-                                if (!ok) return;
-                            }
+                    if (this.checkStatusAndFlags(gameObject, action)) {
 
                         if (gameObject.canClick == true) {
                             this.tweens.add({
@@ -294,18 +267,7 @@ class AdventureScene extends Phaser.Scene {
                 }
                 gameObject.originalPosition = [gameObject.x, gameObject.y];
                 gameObject.on('pointerover', () => {
-                        if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
-                            // Check neededFlags
-                            if (action.neededFlags) {
-                                let ok = true;
-                                for (let flag in action.neededFlags) {
-                                    if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                                        ok = false;
-                                        break;
-                                    }
-                                }
-                                if (!ok) return;
-                            }
+                        if (this.checkStatusAndFlags(gameObject, action)) {
 
                             if (action.axis === "y") {
                                 this.arrowTween = this.tweens.add({
@@ -366,20 +328,10 @@ class AdventureScene extends Phaser.Scene {
             break;
 
             case "changeStateOnClick":
-                gameObject.on('shortclick', () => {
-                    // Check neededFlags
-                    if (action.neededFlags) {
-                        let ok = true;
-                        for (let flag in action.neededFlags) {
-                            if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        if (!ok) return;
-                    }
-                    
-                    if (gameObject.objData.State == action.actionNeededState || action.actionNeededState == -1) {
+                this.enableHoverCursor(gameObject);
+
+                gameObject.on('shortclick', () => {            
+                    if (this.checkStatusAndFlags(gameObject, action)) {
                         if (gameObject.processingClick) return;
                         gameObject.processingClick = true;
                         gameObject.objData.State = action.actionNewState;
@@ -405,24 +357,16 @@ class AdventureScene extends Phaser.Scene {
 
             case "giveItemOnHold":
                 gameObject.on('pointerdown', () => {
-                    this.game.canvas.style.cursor = 'none';
-                    this.holdIndicator = this.add.sprite(0, 0, 'holdIndicator');
+                    if (this.checkStatusAndFlags(gameObject, action)) {
+
+                        this.holdIndicator = this.add.sprite(0, 0, 'holdIndicator').setScale(7);
+                        this.holdIndicator.play('holdIndicator');
+                        this.handCursor.setVisible(false);
+                    }
                 })
 
                 gameObject.on('longpress', () => {
-                    // Check neededFlags
-                    if (action.neededFlags) {
-                        let ok = true;
-                        for (let flag in action.neededFlags) {
-                            if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        if (!ok) return;
-                    }
-
-                    if (gameObject.objData.State == action.actionNeededState|| action.actionNeededState == -1) {
+                    if (this.checkStatusAndFlags(gameObject, action)) {
                         this.gainItem(action.actionItem);
                         action.actionAlreadyTaken = true;
                         if (action.actionDeleteGameObject == true) {
@@ -438,14 +382,22 @@ class AdventureScene extends Phaser.Scene {
                     
                 })
 
-                gameObject.on('pointerup', () => {
-                    if (this.holdIndicator) {
-                        this.holdIndicator = null;
-                        this.game.canvas.style.cursor = 'auto';
-                    }
-                })
-
         }
+    }
+
+    checkStatusAndFlags(gameObject, action) {
+        if (gameObject.objData.State !== action.actionNeededState && action.actionNeededState !== -1) {
+            return false;
+        }
+        if (!action.neededFlags) {
+            return true;
+        }
+        for (let flag in action.neededFlags) {
+            if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     enableClickAndHold(gameObject) {
@@ -482,6 +434,22 @@ class AdventureScene extends Phaser.Scene {
             }
             isLongPress = false;
         })
+    }
+
+    enableHoverCursor(gameObject) {
+        if (!gameObject.input) {
+            gameObject.setInteractive();
+        }
+        gameObject.on('pointerover', () => {
+            if (!this.handCursor) return;
+            this.handCursor.setVisible(true);
+            this.mouseCursor.setVisible(false);
+        });
+        gameObject.on('pointerout', () => {
+            if (!this.handCursor) return;
+            this.handCursor.setVisible(false);
+            this.mouseCursor.setVisible(true);
+        });
     }
 
     // moved old code down here so Create() doesn't look so messy

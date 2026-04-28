@@ -217,6 +217,33 @@
                         "associatedText": "This is the cabinet one of your roommates uses, better leave it alone"
                     }
                 ]
+            },
+            {
+                "Name": "kitchenCabinet3",
+                "Type": "image",
+                "filePath": ["/assets/kitchen_cabinet2.png", "/assets/kitchen_cabinet2_open.png"],
+                "Position": [130, 200],
+                "Scale": 10,
+                "State": 0,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone",
+                        "neededState": 0
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 0,
+                        "newState": 1,
+                        "associatedText": "you opened the cabinet"
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 1,
+                        "newState": 0,
+                        "associatedText": "you closed the cabinet"
+                    }
+                ]
             }
         ]
     }
