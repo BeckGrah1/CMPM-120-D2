@@ -24,6 +24,137 @@
                         "associatedText": ["You turn around"]
                     }
                 ]
+            },
+            {
+                "Name": "sinkCabinet",
+                "Type": "image",
+                "filePath": ["/assets/double_cabinet2.png"],
+                "Position": [720, 610],
+                "Scale": 10,
+                "State": 0,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "That's the cleaning supplies cabinet, it hasn't been opened in a long time",
+                        "neededState": 0
+                    },
+                    {
+                        "Type": "noClick",
+                        "associatedText": "That's the cleaning supplies cabinet, it hasn't been opened in a long time"
+                    }
+                ]
+            },
+            {
+                "Name": "doubleCabinet1",
+                "Type": "image",
+                "filePath": ["/assets/double_cabinet2.png"],
+                "Position": [250, 610],
+                "Scale": 10,
+                "State": 0,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone",
+                        "neededState": 0
+                    },
+                    {
+                        "Type": "noClick",
+                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone"
+                    }
+                ]
+            },
+            {
+                "Name": "doubleCabinet1",
+                "Type": "image",
+                "filePath": ["/assets/double_cabinet2.png", "/assets/double_cabinet2_open.png"],
+                "Position": [1190, 610],
+                "Scale": 10,
+                "State": 0,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is your cabinet, all of your dishes and utensils are in there",
+                        "neededState": 0
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 0,
+                        "newState": 1,
+                        "associatedText": "You opened the cabinet"
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 1,
+                        "newState": 0,
+                        "associatedText": "You closed the cabinet"
+                    }
+                ]
+            },
+            {
+                "Name": "sink",
+                "Type": "image",
+                "filePath": ["/assets/sink.png", "/assets/sink_on.png"],
+                "Position": [720, 410],
+                "Scale": 10,
+                "State": 0,
+                "Flags": {"trayInSink": false},
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Turn on sink?",
+                        "neededState": 0,
+                        "neededFlags": { "trayInSink": false}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "It's still on, turn it off?",
+                        "neededState": 1,
+                        "neededFlags": { "trayInSink": false}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Turn on sink?\n\nThis would be a good spot to put the dirty tray (hold)",
+                        "neededState": 0,
+                        "neededFlags": { "trayInSink": false},
+                        "neededItems": ["dirty tray"]
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "It's still on, turn it off?\n\nThis would be a good spot to put the dirty tray (hold)",
+                        "neededState": 1,
+                        "neededFlags": { "trayInSink": false},
+                        "neededItems": ["dirty tray"]
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Turn on sink?\n\nThere's a dirty tray at the bottom",
+                        "neededState": 0,
+                        "neededFlags": { "trayInSink": true}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "It's still on, turn it off?\n\nThere's a dirty tray at the bottom",
+                        "neededState": 1,
+                        "neededFlags": { "trayInSink": true}
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 0,
+                        "newState": 1,
+                        "associatedText": "you turned on the sink"
+                    },
+                    {
+                        "Type": "changeStateOnClick",
+                        "neededState": 1,
+                        "newState": 0,
+                        "associatedText": "you turned off the sink"
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "setFlag": {"trayInSink": true},
+                        "neededItems": ["dirty tray"]
+                    }
+                ]
             }
         ]
     }

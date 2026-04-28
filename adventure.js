@@ -201,15 +201,15 @@ class AdventureScene extends Phaser.Scene {
     }
 
     setupObjectAction(gameObject, action) {
-        switch(action.actionType) {
+        switch(action.Type) {
             case "showHoverText":
                 if (!gameObject.input) {
                     gameObject.setInteractive();
                 }
                 gameObject.on('pointerover', () => {
-                    if (this.checkStatusAndFlags(gameObject, action)) {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
 
-                        this.showMessage(action.actionAssociatedText);
+                        this.showMessage(action.associatedText);
 
                         if (action.setFlag) {
                             Object.assign(gameObject.objData.Flags, action.setFlag);
@@ -222,10 +222,10 @@ class AdventureScene extends Phaser.Scene {
                 this.enableHoverCursor(gameObject);
                 gameObject.setInteractive();
                 gameObject.on('shortclick', () => {
-                    if (this.checkStatusAndFlags(gameObject, action)) {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
 
-                        this.showMessage(action.actionAssociatedText);
-                        this.gotoScene(action.actionTargetScene);
+                        this.showMessage(action.associatedText);
+                        this.gotoScene(action.targetScene);
 
                         if (action.setFlag) {
                             Object.assign(gameObject.objData.Flags, action.setFlag);
@@ -240,7 +240,7 @@ class AdventureScene extends Phaser.Scene {
                 }
                 gameObject.canClick = true;
                 gameObject.on('shortclick', () => {
-                    if (this.checkStatusAndFlags(gameObject, action)) {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
 
                         if (gameObject.canClick == true) {
                             this.tweens.add({
@@ -251,7 +251,7 @@ class AdventureScene extends Phaser.Scene {
                                 ease: 'Sine.inOut',
                                 duration: 100
                             });
-                            this.showMessage(action.actionAssociatedText);
+                            this.showMessage(action.associatedText);
                             gameObject.canClick = false;
                             this.time.delayedCall(600, () => {
                                 gameObject.canClick = true;
@@ -267,7 +267,7 @@ class AdventureScene extends Phaser.Scene {
                 }
                 gameObject.originalPosition = [gameObject.x, gameObject.y];
                 gameObject.on('pointerover', () => {
-                        if (this.checkStatusAndFlags(gameObject, action)) {
+                        if (this.checkStatusItemsAndFlags(gameObject, action)) {
 
                             if (action.axis === "y") {
                                 this.arrowTween = this.tweens.add({
@@ -331,18 +331,18 @@ class AdventureScene extends Phaser.Scene {
                 this.enableHoverCursor(gameObject);
 
                 gameObject.on('shortclick', () => {            
-                    if (this.checkStatusAndFlags(gameObject, action)) {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
                         if (gameObject.processingClick) return;
                         gameObject.processingClick = true;
-                        gameObject.objData.State = action.actionNewState;
+                        gameObject.objData.State = action.newState;
 
                         // only change sprite if the object has the needed texture in its filePath array
-                        if (gameObject.objData.filePath.length - 1 >= action.actionNewState) {
-                            gameObject.setTexture(gameObject.objData.Name + action.actionNewState);
+                        if (gameObject.objData.filePath.length - 1 >= action.newState) {
+                            gameObject.setTexture(gameObject.objData.Name + action.newState);
                         }
 
-                        if (action.actionAssociatedText) {
-                            this.showMessage(action.actionAssociatedText);
+                        if (action.associatedText) {
+                            this.showMessage(action.associatedText);
                         }
 
                         if (action.setFlag) {
@@ -357,7 +357,7 @@ class AdventureScene extends Phaser.Scene {
 
             case "giveItemOnHold":
                 gameObject.on('pointerdown', () => {
-                    if (this.checkStatusAndFlags(gameObject, action)) {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
 
                         this.holdIndicator = this.add.sprite(0, 0, 'holdIndicator').setScale(7);
                         this.holdIndicator.play('holdIndicator');
@@ -366,34 +366,68 @@ class AdventureScene extends Phaser.Scene {
                 })
 
                 gameObject.on('longpress', () => {
-                    if (this.checkStatusAndFlags(gameObject, action)) {
-                        this.gainItem(action.actionItem);
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
+                        this.gainItem(action.item);
                         action.actionAlreadyTaken = true;
-                        if (action.actionDeleteGameObject == true) {
+                        if (action.deleteGameObject == true) {
                             gameObject.destroy();
                         }
                         else if (action.setFlag) {
                             Object.assign(gameObject.objData.Flags, action.setFlag);
                             console.log("Flag set:", gameObject.objData.Flags);
                         }
-
-
                     }
-                    
                 })
+            break;
+
+            case "useItemOnHold":
+                gameObject.on('pointerdown', () => {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
+
+                        this.holdIndicator = this.add.sprite(0, 0, 'holdIndicator').setScale(7);
+                        this.holdIndicator.play('holdIndicator');
+                        this.handCursor.setVisible(false);
+                    }
+                })
+
+                gameObject.on('longpress', () => {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
+                        for (let item in action.neededItems) {
+                            this.loseItem(action.neededItems[item]);
+                        }
+                        if (action.giveItems) {
+                            for (let item in action.giveItems) {
+                                this.gainItem(item);
+                            }
+                        }
+                        action.actionAlreadyTaken = true;
+                        if (action.deleteGameObject == true) {
+                            gameObject.destroy();
+                        }
+                        else if (action.setFlag) {
+                            Object.assign(gameObject.objData.Flags, action.setFlag);
+                            console.log("Flag set:", gameObject.objData.Flags);
+                        }
+                    }
+                })
+            break;
+
+
 
         }
     }
 
-    checkStatusAndFlags(gameObject, action) {
-        if (gameObject.objData.State !== action.actionNeededState && action.actionNeededState !== -1) {
+    checkStatusItemsAndFlags(gameObject, action) {
+        if (gameObject.objData.State !== action.neededState && action.neededState !== -1) {
             return false;
-        }
-        if (!action.neededFlags) {
-            return true;
         }
         for (let flag in action.neededFlags) {
             if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                return false;
+            }
+        }
+        for (let item in action.neededItems) {
+            if (!this.hasItem(action.neededItems[item])) {
                 return false;
             }
         }
@@ -667,28 +701,30 @@ class ObjectData {
 class ActionData {
     constructor(data = {}) {
         try {
-            this.actionType = data.Type;
-            if (this.actionType === "changeScene") {
-                this.actionTargetScene = data.targetScene;
+            this.Type = data.Type;
+            if (this.Type === "changeScene") {
+                this.targetScene = data.targetScene;
             }
-            if (this.actionType === "giveItemDeleteObject") {
-                this.actionItemName = data.itemName;
+            if (this.Type === "giveItemDeleteObject") {
+                this.itemName = data.itemName;
             }
-            if (this.actionType === "moveOnAxisHover") {
+            if (this.Type === "moveOnAxisHover") {
                 this.axis = data.Axis;
             }
-            if (this.actionType === "changeStateOnClick") {
-                this.actionNewState = data.newState;
+            if (this.Type === "changeStateOnClick") {
+                this.newState = data.newState;
             }
-            if (this.actionType === "giveItemOnHold") {
-                this.actionItem = data.Item;
-                this.actionNewState = data.newState;
+            if (this.Type === "giveItemOnHold") {
+                this.item = data.Item;
+                this.newState = data.newState;
             }
-            this.actionAssociatedText = data.associatedText;
-            this.actionNeededState = data.neededState ?? -1;
+            this.associatedText = data.associatedText;
+            this.neededState = data.neededState ?? -1;
             this.neededFlags = data.neededFlags || null;
             this.setFlag = data.setFlag || null;
-            this.actionDeleteGameObject = data.deleteGameObject ?? false;
+            this.deleteGameObject = data.deleteGameObject ?? false;
+            this.neededItems = data.neededItems ?? null;
+            this.giveItems = data.giveItems ?? null;
         }
         catch(error) {
             console.log("Error creating action data, bro did not correctly format his json", error);
