@@ -2,6 +2,10 @@ A simple adventure game by {who?} based on a simple adventure game engine by [Ad
 
 Code requirements:
 - **4+ scenes based on `AdventureScene`**: unsatisfied (name at least 4 of the classes).
+    - Kitchen1Scene
+    - Kitchen2Scene
+    - FridgeScene
+    - BedroomScnene
 - **2+ scenes *not* based on `AdventureScene`**: unsatisfied (name the classes).
 - **2+ methods or other enhancement added to the adventure game engine to simplify my scenes**:
     - SetupObjectAction(gameObejct, action)
