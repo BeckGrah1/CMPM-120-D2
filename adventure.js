@@ -163,11 +163,11 @@ class AdventureScene extends Phaser.Scene {
         }
         if (this.handCursor && this.handCursor.visible) {
             const pointer = this.input.activePointer;
-            this.handCursor.setPosition(pointer.worldX, pointer.worldY);
+            this.handCursor.setPosition(pointer.worldX, pointer.worldY + 30);
         }
         else {
             const pointer = this.input.activePointer;
-            this.mouseCursor.setPosition(pointer.worldX, pointer.worldY);
+            this.mouseCursor.setPosition(pointer.worldX, pointer.worldY + 30);
         }
     }
 
@@ -395,6 +395,7 @@ class AdventureScene extends Phaser.Scene {
             break;
 
             case "useItemOnHold":
+                this.enableHoverCursor(gameObject);
                 gameObject.on('pointerdown', () => {
                     if (this.checkStatusItemsAndFlags(gameObject, action)) {
 
@@ -416,13 +417,36 @@ class AdventureScene extends Phaser.Scene {
                                 this.gainItem(item);
                             }
                         }
+                        if (action.newState) {
+                            this.State = action.newState;
+                            if (gameObject.objData.filePath.length - 1 >= action.newState) {
+                                gameObject.setTexture(gameObject.objData.Name + action.newState);
+                            }
+                        }
+                        if (action.associatedText) {
+                            this.showMessage(action.associatedText);
+                        }
                         action.actionAlreadyTaken = true;
                         if (action.deleteGameObject == true) {
                             gameObject.destroy();
                         }
                         else if (action.setFlag) {
                             Object.assign(gameObject.objData.Flags, action.setFlag);
-                            console.log("Flag set:", gameObject.objData.Flags);
+
+                            if (action.timedStateChange) {
+                                const tsc = action.timedStateChange;
+                                this.time.delayedCall(tsc.delay, () => {
+                                    if (tsc.newState !== undefined) {
+                                        gameObject.objData.State = tsc.newState;
+                                        if (gameObject.objData.filePath.length - 1 >= tsc.newState) {
+                                            gameObject.setTexture(gameObject.objData.Name + tsc.newState);
+                                        }
+                                    }
+                                    if (tsc.setFlag) {
+                                        Object.assign(gameObject.objData.Flags, tsc.setFlag);
+                                    }
+                                });
+                            }
                         }
                     }
                 })
@@ -776,7 +800,7 @@ class ActionData {
                 this.item = data.Item;
             }
             this.newState = data.newState ?? null;
-            this.associatedText = data.associatedText;
+            this.associatedText = data.associatedText ?? null;
             this.neededState = data.neededState ?? -1;
             this.neededFlags = data.neededFlags || null;
             this.setFlag = data.setFlag || null;
@@ -784,6 +808,7 @@ class ActionData {
             this.neededItems = data.neededItems ?? null;
             this.giveItems = data.giveItems ?? null;
             this.associatedObjects = data.associatedObjects ?? null;
+            this.timedStateChange = data.timedStateChange ?? null;
         }
         catch(error) {
             console.log("Error creating action data, bro did not correctly format his json", error);

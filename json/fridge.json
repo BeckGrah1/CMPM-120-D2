@@ -24,6 +24,42 @@
                         "associatedText": ["You close the fridge"]
                     }
                 ]
+            },
+            {
+                "Name": "fridgeBackground",
+                "Type": "image",
+                "Position": [720, 500],
+                "filePath": ["/assets/fridge_empty.png"],
+                "Scale": 15
+            },
+            {
+                "Name": "fridgeGlass",
+                "Type": "image",
+                "Position": [720, 500],
+                "filePath": ["/assets/fridge_glass.png"],
+                "Scale": 15,
+                "Depth": 50
+            },
+            {
+                "Name": "groundBeefFridge",
+                "Type": "image",
+                "Position": [620, 567],
+                "filePath": ["/assets/ground_beef_fridge.png"],
+                "Scale": 15,
+                "Depth": 55,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is the only thing in the fridge that is mine, I should use it for dinner\n\nPick up? (hold)"
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 0,
+                        "Item": "raw ground beef",
+                        "associatedText": "You take the ground beef",
+                        "deleteGameObject": true
+                    }
+                ]
             }
         ]
     }

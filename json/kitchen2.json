@@ -90,7 +90,7 @@
                     },
                     {
                         "Type": "toggleObjectVisibilityOnClick",
-                        "associatedObjects": ["deepDish"]
+                        "associatedObjects": ["deepDish", "utensilHolder", "plate", "bowl", "pan"]
                     }
                 ]
             },
@@ -122,6 +122,95 @@
                         "Item": "deep dish",
                         "newState": 1,
                         "associatedText": "You take a dish"
+                    }
+                ]
+            },
+            {
+                "Name": "utensilHolder",
+                "Type": "image",
+                "filePath": ["/assets/utensil_holder.png"],
+                "Position": [1100, 600],
+                "Scale": 10,
+                "State": 0,
+                "Depth": 50,
+                "Visible": false,
+                "Flags": { "woodenSpoonTaken": false, "spoonTaken": false},
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "I need a wooden spoon for cooking\n\nPick up? (hold)",
+                        "neededFlags": { "woodenSpoonTaken": false}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "text needed",
+                        "neededFlags": { "woodenSpoonTaken": true}
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 0,
+                        "setFlag": {"woodenSpoonTaken": true},
+                        "Item": "wooden spoon",
+                        "newState": 1,
+                        "associatedText": "You take a wooden spoon, half of its handle is missing"
+                    }
+                ]
+            },
+            {
+                "Name": "plate",
+                "Type": "image",
+                "filePath": ["/assets/plates.png"],
+                "Position": [1250, 580],
+                "Scale": 10,
+                "State": 0,
+                "Depth": 50,
+                "Visible": false,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "You don't really need a plate for this",
+                        "neededFlags": { "woodenSpoonTaken": false}
+                    }
+                ]
+            },
+            {
+                "Name": "bowl",
+                "Type": "image",
+                "filePath": ["/assets/bowls.png"],
+                "Position": [1330, 565],
+                "Scale": 10,
+                "State": 0,
+                "Depth": 50,
+                "Visible": false,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "You don't really need a bowl for this",
+                        "neededFlags": { "woodenSpoonTaken": false}
+                    }
+                ]
+            },
+            {
+                "Name": "pan",
+                "Type": "image",
+                "filePath": ["/assets/pan.png"],
+                "Position": [1290, 715],
+                "Scale": 10,
+                "State": 0,
+                "Depth": 50,
+                "Visible": false,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This would be perfect for making dinner\n\nPick up? (hold)",
+                        "neededFlags": { "woodenSpoonTaken": false}
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 0,
+                        "Item": "pan",
+                        "deleteGameObject": true,
+                        "associatedText": "You take the nonstick pan, its covered in scratches from your roomates using it...yum microplastics"
                     }
                 ]
             },

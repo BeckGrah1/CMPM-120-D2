@@ -110,16 +110,50 @@
             {
                 "Name": "Stovetop",
                 "Type": "image",
-                "filePath": ["/assets/stovetop.png"],
+                "filePath": ["/assets/stovetop.png", "/assets/stovetop_empty_pan.png", "/assets/stovetop_ground_beef_pan.png", "/assets/stovetop_ground_beef_cooked_pan.png"],
                 "State": 0,
-                "Position": [420, 300],
+                "Position": [420, 420],
                 "Scale": 10,
-                "Flags": {},
+                "Flags": { "panOnStove": false, "beefInPan": false, "beefCooked": false},
                 "Actions": [
                     {
                         "Type": "showHoverText",
                         "associatedText": "Surprisingly, none of your roomates left the burners on",
                         "neededState": 0
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Your pan is on the stove, I think there's some ground beef in the fridge",
+                        "neededFlags": {"panOnStove": true, "beefInPan": false, "beefCooked": false}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "It's cooking",
+                        "neededFlags": {"panOnStove": true, "beefInPan": true, "beefCooked": false}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Your pan is on the stove\n\nPut in ground beef? (hold)",
+                        "neededState": 1,
+                        "neededItems": ["raw ground beef"]
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "setFlag": {"panOnStove": true},
+                        "neededItems": ["pan"],
+                        "newState": 1,
+                        "asociatedText": "You place the pan on the stove"
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "setFlag": {"beefInPan": true},
+                        "neededItems": ["raw ground beef"],
+                        "newState": 2,
+                        "timedStateChange": {
+                            "delay": 5000,
+                            "newState": 3,
+                            "setFlag": {"beefCooked": true}
+                        }
                     }
                 ]
             },
