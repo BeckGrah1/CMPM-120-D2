@@ -87,6 +87,41 @@
                         "neededState": 1,
                         "newState": 0,
                         "associatedText": "You closed the cabinet"
+                    },
+                    {
+                        "Type": "toggleObjectVisibilityOnClick",
+                        "associatedObjects": ["deepDish"]
+                    }
+                ]
+            },
+            {
+                "Name": "deepDish",
+                "Type": "image",
+                "filePath": ["/assets/deep_dishes.png", "/assets/deep_dish2.png"],
+                "Position": [1100,700],
+                "Scale": 10,
+                "State": 0,
+                "Depth": 50,
+                "Visible": false,
+                "Flags": { "deepDishTaken": false},
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This would be a good dish for the food I'm making\n\nPick up? (hold)",
+                        "neededFlags": { "deepDishTaken": false}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "There's only one left",
+                        "neededFlags": { "deepDishTaken": true}
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 0,
+                        "setFlag": {"deepDishTaken": true},
+                        "Item": "deep dish",
+                        "newState": 1,
+                        "associatedText": "You take a dish"
                     }
                 ]
             },

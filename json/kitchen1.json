@@ -219,7 +219,7 @@
                 ]
             },
             {
-                "Name": "kitchenCabinet3",
+                "Name": "myCabinet",
                 "Type": "image",
                 "filePath": ["/assets/kitchen_cabinet2.png", "/assets/kitchen_cabinet2_open.png"],
                 "Position": [130, 200],
@@ -228,7 +228,7 @@
                 "Actions": [
                     {
                         "Type": "showHoverText",
-                        "associatedText": "This is the cabinet one of your roommates uses, better leave it alone",
+                        "associatedText": "This is your cabinet, open it?",
                         "neededState": 0
                     },
                     {
@@ -242,6 +242,33 @@
                         "neededState": 1,
                         "newState": 0,
                         "associatedText": "you closed the cabinet"
+                    },
+                    {
+                        "Type": "toggleObjectVisibilityOnClick",
+                        "associatedObjects": ["boxOfFood"]
+                    }
+                ]
+            },
+            {
+                "Name": "boxOfFood",
+                "Type": "image",
+                "filePath": ["/assets/box_of_food.png"],
+                "Position": [160, 275],
+                "Scale": 10,
+                "State": 0,
+                "Visible": false,
+                "Depth": 50,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "A box of Velveeta Beef Stroganoff...you had this for dinner yesterday\n\nPick up? (hold)"
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 0,
+                        "Item": "Velveeta Beef Stroganoff",
+                        "associatedText": "You take a dish",
+                        "deleteGameObject": true
                     }
                 ]
             }

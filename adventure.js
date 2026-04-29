@@ -23,7 +23,7 @@ class AdventureScene extends Phaser.Scene {
      * @param {{inventory?: string[]}} data
      */
     init(data) {
-        this.inventory = data.inventory || [];
+        this.game.globalInventory = this.game.globalInventory || [];
     }
 
     /**
@@ -61,6 +61,12 @@ class AdventureScene extends Phaser.Scene {
      */
     create() {
         this.game.canvas.style.cursor = 'none';
+
+        // added to make sure the camera fades in on scene wake
+        this.events.on('wake', () => {
+            this.cameras.main.fadeIn(this.transitionDuration, 0, 0, 0);
+            this.updateInventory();
+        });
 
         /** @type {number} Duration in ms of scene fade-in / fade-out. */
         this.transitionDuration = 1000;
@@ -195,7 +201,7 @@ class AdventureScene extends Phaser.Scene {
             objectData.Position[0],
             objectData.Position[1],
             objectData.Name + objectData.State
-        ).setScale(objectData.Scale).setRotation(Phaser.Math.DegToRad(objectData.Rotation));
+        ).setScale(objectData.Scale).setRotation(Phaser.Math.DegToRad(objectData.Rotation)).setDepth(objectData.Depth).setVisible(objectData.Visible).setName(objectData.Name);
         this.enableClickAndHold(obj);
         return obj;
     }
@@ -356,10 +362,11 @@ class AdventureScene extends Phaser.Scene {
             break;
 
             case "giveItemOnHold":
+                this.enableHoverCursor(gameObject);
                 gameObject.on('pointerdown', () => {
                     if (this.checkStatusItemsAndFlags(gameObject, action)) {
 
-                        this.holdIndicator = this.add.sprite(0, 0, 'holdIndicator').setScale(7);
+                        this.holdIndicator = this.add.sprite(0, 0, 'holdIndicator').setScale(7).setDepth(100);
                         this.holdIndicator.play('holdIndicator');
                         this.handCursor.setVisible(false);
                     }
@@ -369,6 +376,13 @@ class AdventureScene extends Phaser.Scene {
                     if (this.checkStatusItemsAndFlags(gameObject, action)) {
                         this.gainItem(action.item);
                         action.actionAlreadyTaken = true;
+                        if (action.newState) {
+                            gameObject.objData.State = action.newState;
+
+                            if (gameObject.objData.filePath.length - 1 >= action.newState) {
+                                gameObject.setTexture(gameObject.objData.Name + action.newState);
+                            }
+                        }
                         if (action.deleteGameObject == true) {
                             gameObject.destroy();
                         }
@@ -392,11 +406,13 @@ class AdventureScene extends Phaser.Scene {
 
                 gameObject.on('longpress', () => {
                     if (this.checkStatusItemsAndFlags(gameObject, action)) {
-                        for (let item in action.neededItems) {
-                            this.loseItem(action.neededItems[item]);
+                        if (action.neededItems) {
+                            for (let item of action.neededItems) {
+                                this.loseItem(item);
+                            }
                         }
                         if (action.giveItems) {
-                            for (let item in action.giveItems) {
+                            for (let item of action.giveItems) {
                                 this.gainItem(item);
                             }
                         }
@@ -412,6 +428,23 @@ class AdventureScene extends Phaser.Scene {
                 })
             break;
 
+            case "toggleObjectVisibilityOnClick":
+                gameObject.on('shortclick', () => {
+                    if (this.checkStatusItemsAndFlags(gameObject, action)) {
+                        if (action.associatedObjects == null) {
+                            return;
+                        }
+
+                        for (let objName of action.associatedObjects) {
+                            const obj = this.children.getByName(objName);
+                            if (obj) {
+                               obj.setVisible(!obj.visible); 
+                            }
+                        }
+                    }
+                })
+            break;
+
 
 
         }
@@ -421,13 +454,18 @@ class AdventureScene extends Phaser.Scene {
         if (gameObject.objData.State !== action.neededState && action.neededState !== -1) {
             return false;
         }
-        for (let flag in action.neededFlags) {
-            if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
-                return false;
+        if (action.neededFlags) {
+            for (let flag in action.neededFlags) {
+                if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                    return false;
+                }
             }
         }
-        for (let item in action.neededItems) {
-            if (!this.hasItem(action.neededItems[item])) {
+        if (action.neededItems == null) {
+            return true;
+        }
+        for (let item of action.neededItems) {
+            if (!this.hasItem(item)) {
                 return false;
             }
         }
@@ -541,7 +579,7 @@ class AdventureScene extends Phaser.Scene {
      * you generally do not need to call this yourself.
      */
     updateInventory() {
-        if (this.inventory.length > 0) {
+        if (this.game.globalInventory.length > 0) {
             this.tweens.add({
                 targets: this.inventoryBanner,
                 alpha: 1,
@@ -559,7 +597,7 @@ class AdventureScene extends Phaser.Scene {
         }
         this.inventoryTexts = [];
         let h = this.h * 0.66 + 3 * this.s;
-        this.inventory.forEach((e, i) => {
+        this.game.globalInventory.forEach((e, i) => {
             let text = this.add.text(this.w * 0.75 + 2 * this.s, h, e)
                 .setStyle({ fontSize: `${1.5 * this.s}px` })
                 .setWordWrapWidth(this.w * 0.75 + 4 * this.s);
@@ -575,7 +613,7 @@ class AdventureScene extends Phaser.Scene {
      * @returns {boolean}
      */
     hasItem(item) {
-        return this.inventory.includes(item);
+        return this.game.globalInventory.includes(item);
     }
 
     /**
@@ -585,11 +623,11 @@ class AdventureScene extends Phaser.Scene {
      * @param {string} item Item name. Short and consistent works best (e.g. `"key"`, not `"a shiny key"`).
      */
     gainItem(item) {
-        if (this.inventory.includes(item)) {
+        if (this.game.globalInventory.includes(item)) {
             console.warn('gaining item already held:', item);
             return;
         }
-        this.inventory.push(item);
+        this.game.globalInventory.push(item);
         this.updateInventory();
         for (let text of this.inventoryTexts) {
             if (text.text == item) {
@@ -611,7 +649,7 @@ class AdventureScene extends Phaser.Scene {
      * @param {string} item Item name. Must match the name passed to {@link AdventureScene#gainItem}.
      */
     loseItem(item) {
-        if (!this.inventory.includes(item)) {
+        if (!this.game.globalInventory.includes(item)) {
             console.warn('losing item not held:', item);
             return;
         }
@@ -626,23 +664,44 @@ class AdventureScene extends Phaser.Scene {
                 });
             }
         }
-        this.time.delayedCall(500, () => {
-            this.inventory = this.inventory.filter((e) => e != item);
-            this.updateInventory();
-        });
+        const index = this.game.globalInventory.indexOf(item);
+        // change to a splice to fix reassigning issue
+        this.game.globalInventory.splice(index, 1);
+        this.updateInventory();
     }
 
     /**
      * Fade out the camera and transition to another scene by key, carrying
-     * the current inventory with us.
+     * the current inventory with us. Changed to keep scenes active in background
      *
      * @param {string} key The Phaser scene key of the destination scene.
      */
     gotoScene(key) {
         this.cameras.main.fade(this.transitionDuration, 0, 0, 0);
+        function logItem(item) {
+            console.log(item);
+        }
+        this.game.globalInventory.forEach(logItem);
         this.time.delayedCall(this.transitionDuration, () => {
-            this.scene.start(key, { inventory: this.inventory });
-        });
+            const target = this.scene.get(key);
+            console.log('Target key:', key);
+            console.log('Target scene object:', target);
+            if (target) {
+                console.log('Target status:', target.scene.settings.status);
+            }
+            if (target && target.scene.settings.status === Phaser.Scenes.SLEEPING) {
+                this.scene.sleep();
+                this.scene.wake(key);
+                console.log("sleep wake code ran");
+            } else {
+                this.scene.sleep();
+                this.scene.run(key);
+            }
+            function logItem(item) {
+                console.log(item);
+            }
+            this.game.globalInventory.forEach(logItem);
+        })
     }
 
     /**
@@ -691,6 +750,8 @@ class ObjectData {
             this.Rotation = data.Rotation ?? 0;
             this.State = data.State ?? 0;
             this.Flags = data.Flags || {};
+            this.Depth = data.Depth || 0;
+            this.Visible = data.Visible ?? true;
         }
         catch(error) {
             console.log("Error creating object data, bro did not correctly format his json", error);
@@ -711,13 +772,10 @@ class ActionData {
             if (this.Type === "moveOnAxisHover") {
                 this.axis = data.Axis;
             }
-            if (this.Type === "changeStateOnClick") {
-                this.newState = data.newState;
-            }
             if (this.Type === "giveItemOnHold") {
                 this.item = data.Item;
-                this.newState = data.newState;
             }
+            this.newState = data.newState ?? null;
             this.associatedText = data.associatedText;
             this.neededState = data.neededState ?? -1;
             this.neededFlags = data.neededFlags || null;
@@ -725,6 +783,7 @@ class ActionData {
             this.deleteGameObject = data.deleteGameObject ?? false;
             this.neededItems = data.neededItems ?? null;
             this.giveItems = data.giveItems ?? null;
+            this.associatedObjects = data.associatedObjects ?? null;
         }
         catch(error) {
             console.log("Error creating action data, bro did not correctly format his json", error);
