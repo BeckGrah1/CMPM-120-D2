@@ -24,6 +24,7 @@ class AdventureScene extends Phaser.Scene {
      */
     init(data) {
         this.game.globalInventory = this.game.globalInventory || [];
+        this.game.globalFlags = this.game.globalFlags || {};
     }
 
     /**
@@ -375,6 +376,9 @@ class AdventureScene extends Phaser.Scene {
                 gameObject.on('longpress', () => {
                     if (this.checkStatusItemsAndFlags(gameObject, action)) {
                         this.gainItem(action.item);
+                        if (action.associatedText) {
+                            this.showMessage(action.associatedText);
+                        }
                         action.actionAlreadyTaken = true;
                         if (action.newState) {
                             gameObject.objData.State = action.newState;
@@ -418,7 +422,7 @@ class AdventureScene extends Phaser.Scene {
                             }
                         }
                         if (action.newState) {
-                            this.State = action.newState;
+                            gameObject.objData.State = action.newState;
                             if (gameObject.objData.filePath.length - 1 >= action.newState) {
                                 gameObject.setTexture(gameObject.objData.Name + action.newState);
                             }
@@ -447,6 +451,9 @@ class AdventureScene extends Phaser.Scene {
                                     }
                                 });
                             }
+                        }
+                        if (action.setGlobalFlags) {
+                            Object.assign(this.game.globalFlags, action.setGlobalFlags);
                         }
                     }
                 })
@@ -481,6 +488,13 @@ class AdventureScene extends Phaser.Scene {
         if (action.neededFlags) {
             for (let flag in action.neededFlags) {
                 if ((gameObject.objData.Flags[flag] ?? false) !== action.neededFlags[flag]) {
+                    return false;
+                }
+            }
+        }
+        if (action.neededGlobalFlags) {
+            for (let flag in action.neededGlobalFlags) {
+                if ((this.game.globalFlags[flag] ?? false) !== action.neededGlobalFlags[flag]) {
                     return false;
                 }
             }
@@ -809,6 +823,8 @@ class ActionData {
             this.giveItems = data.giveItems ?? null;
             this.associatedObjects = data.associatedObjects ?? null;
             this.timedStateChange = data.timedStateChange ?? null;
+            this.setGlobalFlags = data.setGlobalFlags ?? null;
+            this.neededGlobalFlags = data.neededGlobalFlags ?? null;
         }
         catch(error) {
             console.log("Error creating action data, bro did not correctly format his json", error);

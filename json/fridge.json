@@ -60,6 +60,34 @@
                         "deleteGameObject": true
                     }
                 ]
+            },
+            {
+                "Name": "milk",
+                "Type": "image",
+                "Position": [820, 645],
+                "filePath": ["/assets/milk.png"],
+                "Scale": 15,
+                "Depth": 45,
+                "State": 0,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is your roommates milk, better not touch it"
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "This is your roommates milk, better not touch it\n\nTake anyway? (hold)",
+                        "neededGlobalFlags": {"milkTakeable": true}
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 0,
+                        "Item": "roommate's milk",
+                        "neededGlobalFlags": {"milkTakeable": true},
+                        "associatedText": "You take the milk, hopefully no one saw",
+                        "deleteGameObject": true
+                    }
+                ]
             }
         ]
     }

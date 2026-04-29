@@ -90,7 +90,7 @@
                     },
                     {
                         "Type": "toggleObjectVisibilityOnClick",
-                        "associatedObjects": ["deepDish", "utensilHolder", "plate", "bowl", "pan"]
+                        "associatedObjects": ["deepDish", "utensilHolder", "plate", "bowl", "pan", "measuringCup"]
                     }
                 ]
             },
@@ -129,7 +129,7 @@
                 "Name": "utensilHolder",
                 "Type": "image",
                 "filePath": ["/assets/utensil_holder.png"],
-                "Position": [1100, 600],
+                "Position": [1125, 600],
                 "Scale": 10,
                 "State": 0,
                 "Depth": 50,
@@ -149,6 +149,7 @@
                     {
                         "Type": "giveItemOnHold",
                         "neededState": 0,
+                        "neededGlobalFlags": {"woodenSpoonTakeable": true},
                         "setFlag": {"woodenSpoonTaken": true},
                         "Item": "wooden spoon",
                         "newState": 1,
@@ -202,8 +203,7 @@
                 "Actions": [
                     {
                         "Type": "showHoverText",
-                        "associatedText": "This would be perfect for making dinner\n\nPick up? (hold)",
-                        "neededFlags": { "woodenSpoonTaken": false}
+                        "associatedText": "This would be perfect for making dinner\n\nPick up? (hold)"
                     },
                     {
                         "Type": "giveItemOnHold",
@@ -211,6 +211,36 @@
                         "Item": "pan",
                         "deleteGameObject": true,
                         "associatedText": "You take the nonstick pan, its covered in scratches from your roomates using it...yum microplastics"
+                    }
+                ]
+            },
+            {
+                "Name": "measuringCup",
+                "Type": "image",
+                "filePath": ["/assets/measuring_cup.png"],
+                "Position": [1050, 600],
+                "Scale": 10,
+                "State": 0,
+                "Depth": 50,
+                "Visible": false,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "I dont't really need that yet",
+                        "neededGlobalFlags": { "measuringCupTakeable": false}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "I can use this to get water\n\nPick up? (hold)",
+                        "neededGlobalFlags": { "measuringCupTakeable": true}
+                    },
+                    {
+                        "Type": "giveItemOnHold",
+                        "neededState": 0,
+                        "neededGlobalFlags": { "measuringCupTakeable": true},
+                        "Item": "measuring cup",
+                        "deleteGameObject": true,
+                        "associatedText": "You take the measuring cup, all you need now is some water"
                     }
                 ]
             },
@@ -257,6 +287,12 @@
                     },
                     {
                         "Type": "showHoverText",
+                        "associatedText": "Fill up the measuring cup? (hold)",
+                        "neededState": 1,
+                        "neededItems": ["measuring cup"]
+                    },
+                    {
+                        "Type": "showHoverText",
                         "associatedText": "It's still on, turn it off?\n\nThere's a dirty tray at the bottom",
                         "neededState": 1,
                         "neededFlags": { "trayInSink": true}
@@ -277,6 +313,12 @@
                         "Type": "useItemOnHold",
                         "setFlag": {"trayInSink": true},
                         "neededItems": ["dirty tray"]
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 1,
+                        "neededItems": ["measuring cup"],
+                        "giveItems": ["filled measuring cup"]
                     }
                 ]
             }

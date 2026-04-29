@@ -110,11 +110,11 @@
             {
                 "Name": "Stovetop",
                 "Type": "image",
-                "filePath": ["/assets/stovetop.png", "/assets/stovetop_empty_pan.png", "/assets/stovetop_ground_beef_pan.png", "/assets/stovetop_ground_beef_cooked_pan.png"],
+                "filePath": ["/assets/stovetop.png", "/assets/stovetop_empty_pan.png", "/assets/stovetop_ground_beef_pan.png", "/assets/stovetop_ground_beef_cooked_pan.png", "/assets/stovetop_ground_beef_milk_pan.png", "/assets/stovetop_ground_beef_milk_water_pan.png", "/assets/stovetop_ground_beef_milk_water_noodles_pan.png", "/assets/stovetop_beef_stroganoff_pan.png"],
                 "State": 0,
                 "Position": [420, 420],
                 "Scale": 10,
-                "Flags": { "panOnStove": false, "beefInPan": false, "beefCooked": false},
+                "Flags": { "panOnStove": false, "beefInPan": false, "beefCooked": false, "milkInPan": false},
                 "Actions": [
                     {
                         "Type": "showHoverText",
@@ -138,23 +138,103 @@
                         "neededItems": ["raw ground beef"]
                     },
                     {
-                        "Type": "useItemOnHold",
-                        "setFlag": {"panOnStove": true},
-                        "neededItems": ["pan"],
-                        "newState": 1,
-                        "asociatedText": "You place the pan on the stove"
+                        "Type": "showHoverText",
+                        "associatedText": "Your beef is cooked, its time to put the milk in",
+                        "neededFlags": {"beefCooked": true},
+                        "neededState": 3
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Now it needs some water",
+                        "neededFlags": {"milkInPan": true},
+                        "neededState": 4
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Now it just needs the noodles",
+                        "neededFlags": {"waterInPan": true},
+                        "neededState": 5
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Time to stir",
+                        "neededFlags": {"velveetaInPan": true},
+                        "neededState": 6
                     },
                     {
                         "Type": "useItemOnHold",
+                        "neededState": 0,
+                        "neededFlags": {"panOnStove": false},
+                        "setFlag": {"panOnStove": true},
+                        "neededItems": ["pan"],
+                        "newState": 1,
+                        "associatedText": "You place the pan on the stove"
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 1,
+                        "neededFlags": {"beefInPan": false},
                         "setFlag": {"beefInPan": true},
                         "neededItems": ["raw ground beef"],
+                        "setGlobalFlags": {"milkTakeable": true},
                         "newState": 2,
                         "timedStateChange": {
                             "delay": 5000,
                             "newState": 3,
                             "setFlag": {"beefCooked": true}
                         }
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 3,
+                        "neededFlags": {"beefCooked": true},
+                        "setFlag": {"milkInPan": true},
+                        "neededItems": ["roommate's milk"],
+                        "setGlobalFlags": {"measuringCupTakeable": true},
+                        "newState": 4,
+                        "associatedText": "You place the milk in the pan, next it could use some water"
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 4,
+                        "neededFlags": {"milkInPan": true},
+                        "setFlag": {"waterInPan": true},
+                        "neededItems": ["filled measuring cup"],
+                        "setGlobalFlags": {"boxTakeable": true},
+                        "newState": 5,
+                        "associatedText": "You place the water in the pan, now all it needs is the noodles"
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 5,
+                        "neededFlags": {"waterInPan": true},
+                        "setFlag": {"venveetaInPan": true},
+                        "neededItems": ["Velveeta Beef Stroganoff"],
+                        "setGlobalFlags": {"woodenSpoonTakeable": true},
+                        "newState": 6,
+                        "associatedText": "You place the noodles in the pan, now we just have to stir"
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 6,
+                        "neededFlags": {"waterInPan": true},
+                        "setFlag": {"venveetaInPan": true},
+                        "neededItems": ["Velveeta Beef Stroganoff"],
+                        "setGlobalFlags": {"saltTakeable": true},
+                        "newState": 7,
+                        "associatedText": "You place the noodles in the pan, now it just needs to be stirred"
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 7,
+                        "neededFlags": {"velveetaInPan": true},
+                        "setFlag": {"foodDone": true},
+                        "neededItems": ["wooden spoon"],
+                        "setGlobalFlags": {"deepDishTakeable": true},
+                        "newState": 8,
+                        "associatedText": "You stir it up, all that's left is to put it in a dish and bring it to your room!"
                     }
+
                 ]
             },
             {
@@ -300,8 +380,9 @@
                     {
                         "Type": "giveItemOnHold",
                         "neededState": 0,
+                        "neededGlobalFlags": {"boxTakeable": true},
                         "Item": "Velveeta Beef Stroganoff",
-                        "associatedText": "You take a dish",
+                        "associatedText": "You take the box",
                         "deleteGameObject": true
                     }
                 ]

@@ -1,7 +1,7 @@
 A simple adventure game by {who?} based on a simple adventure game engine by [Adam Smith](https://github.com/rndmcnlly).
 
 Code requirements:
-- **4+ scenes based on `AdventureScene`**: unsatisfied (name at least 4 of the classes).
+- **4+ scenes based on `AdventureScene`**:
     - Kitchen1Scene
     - Kitchen2Scene
     - FridgeScene
