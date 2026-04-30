@@ -2,7 +2,29 @@
     "Bedroom": 
     {
         "Objects": [
+            {
+                "Name": "desk",
+                "Type": "image",
+                "filePath": ["/assets/desk.png"],
+                "Position": [720, 500],
+                "Scale": 10,
+                "Actions": [
+                    {
+                        "Type": "useItemOnHold",
 
+                    },
+                    {
+                        "Type": "useItemOnHold",
+                        "neededState": 0,
+                        "neededGlobalFlags": {"foodDone": true},
+                        "setFlag": {"foodTaken": true},
+                        "neededItems": ["deep dish"],
+                        "giveItems": ["beef stroganoff"],
+                        "newState": 1,
+                        "associatedText": "I'll clean the pan later"
+                    }
+                ]
+            }
         ]
     }
 }

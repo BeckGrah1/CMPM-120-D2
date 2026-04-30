@@ -107,7 +107,7 @@
                 "Actions": [
                     {
                         "Type": "showHoverText",
-                        "associatedText": "This would be a good dish for the food I'm making\n\nPick up? (hold)",
+                        "associatedText": "This would be a good dish for the food I'm making, don't need it yet though",
                         "neededFlags": { "deepDishTaken": false}
                     },
                     {
@@ -118,6 +118,7 @@
                     {
                         "Type": "giveItemOnHold",
                         "neededState": 0,
+                        "neededGlobalFlags": { "foodDone": true},
                         "setFlag": {"deepDishTaken": true},
                         "Item": "deep dish",
                         "newState": 1,
@@ -152,7 +153,6 @@
                         "neededGlobalFlags": {"woodenSpoonTakeable": true},
                         "setFlag": {"woodenSpoonTaken": true},
                         "Item": "wooden spoon",
-                        "newState": 1,
                         "associatedText": "You take a wooden spoon, half of its handle is missing"
                     }
                 ]

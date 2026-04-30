@@ -110,11 +110,11 @@
             {
                 "Name": "Stovetop",
                 "Type": "image",
-                "filePath": ["/assets/stovetop.png", "/assets/stovetop_empty_pan.png", "/assets/stovetop_ground_beef_pan.png", "/assets/stovetop_ground_beef_cooked_pan.png", "/assets/stovetop_ground_beef_milk_pan.png", "/assets/stovetop_ground_beef_milk_water_pan.png", "/assets/stovetop_ground_beef_milk_water_noodles_pan.png", "/assets/stovetop_beef_stroganoff_pan.png"],
+                "filePath": ["/assets/stovetop.png", "/assets/stovetop_empty_pan.png", "/assets/stovetop_ground_beef_pan.png", "/assets/stovetop_ground_beef_cooked_pan.png", "/assets/stovetop_ground_beef_milk_pan.png", "/assets/stovetop_ground_beef_milk_water_pan.png", "/assets/stovetop_ground_beef_milk_water_noodles_pan.png", "/assets/stovetop_gbeef_stroganoff_pan.png", "/assets/stovetop_empty_pan.png"],
                 "State": 0,
                 "Position": [420, 420],
                 "Scale": 10,
-                "Flags": { "panOnStove": false, "beefInPan": false, "beefCooked": false, "milkInPan": false},
+                "Flags": { "panOnStove": false, "beefInPan": false, "beefCooked": false, "milkInPan": false, "waterInPan": false, "velveetaInPan": false},
                 "Actions": [
                     {
                         "Type": "showHoverText",
@@ -160,6 +160,12 @@
                         "associatedText": "Time to stir",
                         "neededFlags": {"velveetaInPan": true},
                         "neededState": 6
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Alright, time to put it in a dish, and take it to my room",
+                        "neededGlobalFlags": {"foodDone": true},
+                        "neededState": 7
                     },
                     {
                         "Type": "useItemOnHold",
@@ -208,7 +214,7 @@
                         "Type": "useItemOnHold",
                         "neededState": 5,
                         "neededFlags": {"waterInPan": true},
-                        "setFlag": {"venveetaInPan": true},
+                        "setFlag": {"velveetaInPan": true},
                         "neededItems": ["Velveeta Beef Stroganoff"],
                         "setGlobalFlags": {"woodenSpoonTakeable": true},
                         "newState": 6,
@@ -217,24 +223,23 @@
                     {
                         "Type": "useItemOnHold",
                         "neededState": 6,
-                        "neededFlags": {"waterInPan": true},
-                        "setFlag": {"venveetaInPan": true},
-                        "neededItems": ["Velveeta Beef Stroganoff"],
-                        "setGlobalFlags": {"saltTakeable": true},
+                        "neededFlags": {"velveetaInPan": true},
+                        "setFlag": {"velveetaInPan": true},
+                        "neededItems": ["wooden spoon"],
+                        "setGlobalFlags": {"foodDone": true},
                         "newState": 7,
-                        "associatedText": "You place the noodles in the pan, now it just needs to be stirred"
+                        "associatedText": "Its done, now we just need to plate it and head to the room"
                     },
                     {
                         "Type": "useItemOnHold",
                         "neededState": 7,
-                        "neededFlags": {"velveetaInPan": true},
-                        "setFlag": {"foodDone": true},
-                        "neededItems": ["wooden spoon"],
-                        "setGlobalFlags": {"deepDishTakeable": true},
+                        "neededGlobalFlags": {"foodDone": true},
+                        "setFlag": {"foodTaken": true},
+                        "neededItems": ["deep dish"],
+                        "giveItems": ["beef stroganoff"],
                         "newState": 8,
-                        "associatedText": "You stir it up, all that's left is to put it in a dish and bring it to your room!"
+                        "associatedText": "I'll clean the pan later"
                     }
-
                 ]
             },
             {
