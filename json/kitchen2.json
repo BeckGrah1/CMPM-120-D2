@@ -112,6 +112,12 @@
                     },
                     {
                         "Type": "showHoverText",
+                        "associatedText": "This would be a good dish for the food I'm making\n\nPick up? (hold)",
+                        "neededFlags": { "deepDishTaken": false},
+                        "neededGlobalFlags": { "foodDone": true}
+                    },
+                    {
+                        "Type": "showHoverText",
                         "associatedText": "There's only one left",
                         "neededFlags": { "deepDishTaken": true}
                     },
@@ -139,21 +145,29 @@
                 "Actions": [
                     {
                         "Type": "showHoverText",
-                        "associatedText": "I need a wooden spoon for cooking\n\nPick up? (hold)",
+                        "associatedText": "I'll need utensils from here later",
                         "neededFlags": { "woodenSpoonTaken": false}
                     },
                     {
                         "Type": "showHoverText",
-                        "associatedText": "text needed",
+                        "associatedText": "I need a wooden spoon for cooking\n\nPick up? (hold)",
+                        "neededFlags": { "woodenSpoonTaken": false},
+                        "neededGlobalFlags": { "woodenSpoonTakeable": true}
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "It's your utensil holder, missing a wooden spoon",
                         "neededFlags": { "woodenSpoonTaken": true}
                     },
                     {
                         "Type": "giveItemOnHold",
                         "neededState": 0,
                         "neededGlobalFlags": {"woodenSpoonTakeable": true},
+                        "neededFlags": {"woodenSpoonTaken": false},
                         "setFlag": {"woodenSpoonTaken": true},
                         "Item": "wooden spoon",
-                        "associatedText": "You take a wooden spoon, half of its handle is missing"
+                        "associatedText": "You take a wooden spoon, half of its handle is missing",
+                        "gotoScene": "winScene"
                     }
                 ]
             },

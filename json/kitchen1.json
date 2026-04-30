@@ -57,7 +57,7 @@
                     {
                         "Type": "changeScene",
                         "targetScene": "Bedroom",
-                        "associatedText": "You open the fridge"
+                        "associatedText": "You walk to your room"
                     }
                 ]
             },
@@ -85,29 +85,6 @@
                 ]
             },
             {
-                "Name": "ArrowPantry",
-                "Type": "image",
-                "filePath": ["/assets/arrow_small.png"],
-                "Position": [1300, 600],
-                "Rotation": 90,
-                "Scale": 8,
-                "Actions": [
-                    {
-                        "Type": "showHoverText",
-                        "associatedText": "Go to the pantry?"
-                    },
-                    {
-                        "Type": "moveOnAxisHover",
-                        "Axis": "x"
-                    },
-                    {
-                        "Type": "changeScene",
-                        "targetScene": "Pantry",
-                        "associatedText": "You walk to the pantry"
-                    }
-                ]
-            },
-            {
                 "Name": "Stovetop",
                 "Type": "image",
                 "filePath": ["/assets/stovetop.png", "/assets/stovetop_empty_pan.png", "/assets/stovetop_ground_beef_pan.png", "/assets/stovetop_ground_beef_cooked_pan.png", "/assets/stovetop_ground_beef_milk_pan.png", "/assets/stovetop_ground_beef_milk_water_pan.png", "/assets/stovetop_ground_beef_milk_water_noodles_pan.png", "/assets/stovetop_gbeef_stroganoff_pan.png", "/assets/stovetop_empty_pan.png"],
@@ -120,6 +97,12 @@
                         "Type": "showHoverText",
                         "associatedText": "Surprisingly, none of your roomates left the burners on",
                         "neededState": 0
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Place pan on stove? (hold)",
+                        "neededState": 0,
+                        "neededItems": ["pan"]
                     },
                     {
                         "Type": "showHoverText",
@@ -145,8 +128,22 @@
                     },
                     {
                         "Type": "showHoverText",
+                        "associatedText": "Your beef is cooked, its time to put the milk in\n\nPut in milk? (hold)",
+                        "neededFlags": {"beefCooked": true},
+                        "neededState": 3,
+                        "neededItems": ["roommate's milk"]
+                    },
+                    {
+                        "Type": "showHoverText",
                         "associatedText": "Now it needs some water",
                         "neededFlags": {"milkInPan": true},
+                        "neededState": 4
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Now it needs some water\n\nPut in water? (hold)",
+                        "neededFlags": {"milkInPan": true},
+                        "neededItems": ["filled measuring cup"],
                         "neededState": 4
                     },
                     {
@@ -156,6 +153,13 @@
                         "neededState": 5
                     },
                     {
+                       "Type": "showHoverText",
+                        "associatedText": "Now it just needs the noodles\n\nPut in noodles? (hold)",
+                        "neededFlags": {"waterInPan": true},
+                        "neededState": 5,
+                        "neededItems": ["Velveeta Beef Stroganoff"]
+                    },
+                    {
                         "Type": "showHoverText",
                         "associatedText": "Time to stir",
                         "neededFlags": {"velveetaInPan": true},
@@ -163,9 +167,29 @@
                     },
                     {
                         "Type": "showHoverText",
+                        "associatedText": "Stir? (hold)",
+                        "neededFlags": {"velveetaInPan": true},
+                        "neededState": 6,
+                        "neededItems": ["wooden spoon"]
+                    },
+                    {
+                        "Type": "showHoverText",
                         "associatedText": "Alright, time to put it in a dish, and take it to my room",
                         "neededGlobalFlags": {"foodDone": true},
                         "neededState": 7
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "Plate food? (hold)",
+                        "neededGlobalFlags": {"foodDone": true},
+                        "neededState": 7,
+                        "neededItems": ["deep dish"]
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "I can wash this later, after I eat this in my room",
+                        "neededFlags": {"foodTaken": true},
+                        "neededState": 8
                     },
                     {
                         "Type": "useItemOnHold",
@@ -380,7 +404,12 @@
                 "Actions": [
                     {
                         "Type": "showHoverText",
-                        "associatedText": "A box of Velveeta Beef Stroganoff...you had this for dinner yesterday\n\nPick up? (hold)"
+                        "associatedText": "A box of Velveeta Beef Stroganoff...you had this for dinner yesterday"
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": "A box of Velveeta Beef Stroganoff...you had this for dinner yesterday\n\nPick up? (hold)",
+                        "neededGlobalFlags": { "boxTakeable": true}
                     },
                     {
                         "Type": "giveItemOnHold",

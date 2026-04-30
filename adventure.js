@@ -430,6 +430,15 @@ class AdventureScene extends Phaser.Scene {
                         if (action.associatedText) {
                             this.showMessage(action.associatedText);
                         }
+                        // currently set to toggle visibility
+                        if (action.associatedObjects) {
+                            for (let objName of action.associatedObjects) {
+                                const obj = this.children.getByName(objName);
+                                if (obj) {
+                                    obj.setVisible(!obj.visible); 
+                                }
+                        }
+                        }
                         action.actionAlreadyTaken = true;
                         if (action.deleteGameObject == true) {
                             gameObject.destroy();
@@ -454,6 +463,9 @@ class AdventureScene extends Phaser.Scene {
                         }
                         if (action.setGlobalFlags) {
                             Object.assign(this.game.globalFlags, action.setGlobalFlags);
+                        }
+                        if (action.gotoScene) {
+                            this.gotoScene(action.gotoScene);
                         }
                     }
                 })
@@ -825,6 +837,7 @@ class ActionData {
             this.timedStateChange = data.timedStateChange ?? null;
             this.setGlobalFlags = data.setGlobalFlags ?? null;
             this.neededGlobalFlags = data.neededGlobalFlags ?? null;
+            this.gotoScene = data.gotoScene ?? null;
         }
         catch(error) {
             console.log("Error creating action data, bro did not correctly format his json", error);

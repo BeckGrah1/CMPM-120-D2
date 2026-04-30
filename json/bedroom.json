@@ -6,22 +6,51 @@
                 "Name": "desk",
                 "Type": "image",
                 "filePath": ["/assets/desk.png"],
-                "Position": [720, 500],
+                "Position": [900, 500],
                 "Scale": 10,
                 "Actions": [
                     {
-                        "Type": "useItemOnHold",
-
+                        "Type": "showHoverText",
+                        "associatedText": "This would be a good spot to eat dinner"
+                    },
+                    {
+                        "Type": "showHoverText",
+                        "neededItems": ["beef stroganoff"],
+                        "associatedText": "Place dinner? (hold)"
                     },
                     {
                         "Type": "useItemOnHold",
                         "neededState": 0,
-                        "neededGlobalFlags": {"foodDone": true},
-                        "setFlag": {"foodTaken": true},
-                        "neededItems": ["deep dish"],
-                        "giveItems": ["beef stroganoff"],
+                        "neededItems": ["beef stroganoff"],
                         "newState": 1,
-                        "associatedText": "I'll clean the pan later"
+                        "associatedObjects": ["beef stroganoff"],
+                        "gotoScene": "WinScene"
+                    }
+                ]
+            },
+            {
+                "Name": "beef stroganoff",
+                "Type": "image",
+                "filePath": ["/assets/dish.png"],
+                "Position": [900, 330],
+                "Scale": 10,
+                "Visible": false
+            },
+            {
+                "Name": "door",
+                "Type": "image",
+                "filePath": ["/assets/door.png"],
+                "Position": [250, 400],
+                "Scale": 15,
+                "Actions": [
+                    {
+                        "Type": "showHoverText",
+                        "associatedText": ["Go to kitchen?"]
+                    },
+                    {
+                        "Type": "changeScene",
+                        "targetScene": "Kitchen1",
+                        "associatedText": ["You walk to the kitchen"]
                     }
                 ]
             }

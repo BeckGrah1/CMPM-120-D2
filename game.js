@@ -28,6 +28,45 @@ class PantryScene extends AdventureScene {
     }
 }
 
+class WinScene extends Phaser.Scene {
+    constructor() {
+        super("WinScene")
+    }
+
+    preload() {
+        this.load.image("button", "/assets/button.png")
+    }
+
+    create() {
+        this.game.canvas.style.cursor = 'auto';
+        const button = this.add.image(1000, 540, "button").setInteractive().setDisplaySize(600, 200);
+        button.on('pointerdown', () => {
+            window.location.reload();
+        })
+        this.add.text(600, 300, "Thanks for playing!").setStyle({ fontSize: `70px`, color: '#eea' })
+        this.add.text(780, 500, "Play again?").setStyle({ fontSize: `70px`, color: '#eea' })
+    }
+}
+
+class StartScene extends Phaser.Scene {
+    constructor() {
+        super("StartScene")
+    }
+
+    preload() {
+        this.load.image("button", "/assets/button.png")
+    }
+
+    create() {
+        const button = this.add.image(960, 540, "button").setInteractive().setScale(10);
+        button.on('pointerdown', () => {
+            this.scene.start('Kitchen1');
+        })
+        this.add.text(600, 300, "Goal: Make dinner").setStyle({ fontSize: `70px`, color: '#eea' })
+        this.add.text(880, 520, "Start?").setStyle({ fontSize: `50px`, color: '#eea' })
+    }
+}
+
 class Demo1 extends AdventureScene {
     constructor() {
         super("demo1", "First Room");
@@ -154,7 +193,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Kitchen1Scene, Kitchen2Scene, BedroomScene, FridgeScene, PantryScene, Intro, Demo1, Demo2, Outro],
+    scene: [StartScene, WinScene, Kitchen1Scene, Kitchen2Scene, BedroomScene, FridgeScene],
     render: {
         pixelArt: true,
         antialias: false
