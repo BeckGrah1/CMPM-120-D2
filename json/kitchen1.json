@@ -5,7 +5,7 @@
             {
                 "Name": "FridgeBottom",
                 "Type": "image",
-                "filePath": ["/assets/Fridge_Bottom.png"],
+                "filePath": ["assets/Fridge_Bottom.png"],
                 "Position": [1000, 600],
                 "Scale": 10,
                 "Actions": [
@@ -23,7 +23,7 @@
             {
                 "Name": "FridgeTop",
                 "Type": "image",
-                "filePath": ["/assets/Fridge_Bottom.png"],
+                "filePath": ["assets/Fridge_Bottom.png"],
                 "State": 0,
                 "Position": [1000, 275],
                 "Rotation": 0,
@@ -42,7 +42,7 @@
             {
                 "Name": "ArrowBedroom",
                 "Type": "image",
-                "filePath": ["/assets/arrow.png"],
+                "filePath": ["assets/arrow.png"],
                 "Position": [1300, 300],
                 "Scale": 8,
                 "Actions": [
