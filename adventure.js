@@ -49,9 +49,9 @@ class AdventureScene extends Phaser.Scene {
             console.log("No sceneJSON provided, ruh roh");
         }
         // preload cursor sprites
-        this.load.spritesheet('holdIndicator', '/assets/mouse_load_spritesheet.png', { frameWidth: 9, frameHeight: 9 });
-        this.load.image('mouseHand', '/assets/mouse_hand.png');
-        this.load.image('mouse', '/assets/mouse.png');
+        this.load.spritesheet('holdIndicator', 'assets/mouse_load_spritesheet.png', { frameWidth: 9, frameHeight: 9 });
+        this.load.image('mouseHand', 'assets/mouse_hand.png');
+        this.load.image('mouse', "assets/mouse.png");
 
     }
 

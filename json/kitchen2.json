@@ -5,7 +5,7 @@
             {
                 "Name": "ArrowKitchen1",
                 "Type": "image",
-                "filePath": ["/assets/arrow_small.png"],
+                "filePath": ["assets/arrow_small.png"],
                 "Position": [760, 900],
                 "Rotation": 180,
                 "Scale": 8,
@@ -28,7 +28,7 @@
             {
                 "Name": "sinkCabinet",
                 "Type": "image",
-                "filePath": ["/assets/double_cabinet2.png"],
+                "filePath": ["assets/double_cabinet2.png"],
                 "Position": [720, 610],
                 "Scale": 10,
                 "State": 0,
@@ -47,7 +47,7 @@
             {
                 "Name": "doubleCabinet1",
                 "Type": "image",
-                "filePath": ["/assets/double_cabinet2.png"],
+                "filePath": ["assets/double_cabinet2.png"],
                 "Position": [250, 610],
                 "Scale": 10,
                 "State": 0,
@@ -66,7 +66,7 @@
             {
                 "Name": "doubleCabinet1",
                 "Type": "image",
-                "filePath": ["/assets/double_cabinet2.png", "/assets/double_cabinet2_open.png"],
+                "filePath": ["assets/double_cabinet2.png", "assets/double_cabinet2_open.png"],
                 "Position": [1190, 610],
                 "Scale": 10,
                 "State": 0,
@@ -97,7 +97,7 @@
             {
                 "Name": "deepDish",
                 "Type": "image",
-                "filePath": ["/assets/deep_dishes.png", "/assets/deep_dish2.png"],
+                "filePath": ["assets/deep_dishes.png", "assets/deep_dish2.png"],
                 "Position": [1100,700],
                 "Scale": 10,
                 "State": 0,
@@ -135,7 +135,7 @@
             {
                 "Name": "utensilHolder",
                 "Type": "image",
-                "filePath": ["/assets/utensil_holder.png"],
+                "filePath": ["assets/utensil_holder.png"],
                 "Position": [1125, 600],
                 "Scale": 10,
                 "State": 0,
@@ -174,7 +174,7 @@
             {
                 "Name": "plate",
                 "Type": "image",
-                "filePath": ["/assets/plates.png"],
+                "filePath": ["assets/plates.png"],
                 "Position": [1250, 580],
                 "Scale": 10,
                 "State": 0,
@@ -191,7 +191,7 @@
             {
                 "Name": "bowl",
                 "Type": "image",
-                "filePath": ["/assets/bowls.png"],
+                "filePath": ["assets/bowls.png"],
                 "Position": [1330, 565],
                 "Scale": 10,
                 "State": 0,
@@ -208,7 +208,7 @@
             {
                 "Name": "pan",
                 "Type": "image",
-                "filePath": ["/assets/pan.png"],
+                "filePath": ["assets/pan.png"],
                 "Position": [1290, 715],
                 "Scale": 10,
                 "State": 0,
@@ -231,7 +231,7 @@
             {
                 "Name": "measuringCup",
                 "Type": "image",
-                "filePath": ["/assets/measuring_cup.png"],
+                "filePath": ["assets/measuring_cup.png"],
                 "Position": [1050, 600],
                 "Scale": 10,
                 "State": 0,
@@ -261,7 +261,7 @@
             {
                 "Name": "sink",
                 "Type": "image",
-                "filePath": ["/assets/sink.png", "/assets/sink_on.png"],
+                "filePath": ["assets/sink.png", "assets/sink_on.png"],
                 "Position": [720, 410],
                 "Scale": 10,
                 "State": 0,

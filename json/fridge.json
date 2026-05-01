@@ -5,7 +5,7 @@
             {
                 "Name": "ArrowKitchen1",
                 "Type": "image",
-                "filePath": ["/assets/arrow_small.png"],
+                "filePath": ["assets/arrow_small.png"],
                 "Position": [760, 900],
                 "Rotation": 180,
                 "Scale": 8,
@@ -29,14 +29,14 @@
                 "Name": "fridgeBackground",
                 "Type": "image",
                 "Position": [720, 500],
-                "filePath": ["/assets/fridge_empty.png"],
+                "filePath": ["assets/fridge_empty.png"],
                 "Scale": 15
             },
             {
                 "Name": "fridgeGlass",
                 "Type": "image",
                 "Position": [720, 500],
-                "filePath": ["/assets/fridge_glass.png"],
+                "filePath": ["assets/fridge_glass.png"],
                 "Scale": 15,
                 "Depth": 50
             },
@@ -44,7 +44,7 @@
                 "Name": "groundBeefFridge",
                 "Type": "image",
                 "Position": [620, 567],
-                "filePath": ["/assets/ground_beef_fridge.png"],
+                "filePath": ["assets/ground_beef_fridge.png"],
                 "Scale": 15,
                 "Depth": 55,
                 "Actions": [
@@ -65,7 +65,7 @@
                 "Name": "milk",
                 "Type": "image",
                 "Position": [820, 645],
-                "filePath": ["/assets/milk.png"],
+                "filePath": ["assets/milk.png"],
                 "Scale": 15,
                 "Depth": 45,
                 "State": 0,

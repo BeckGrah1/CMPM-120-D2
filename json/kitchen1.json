@@ -5,7 +5,7 @@
             {
                 "Name": "FridgeBottom",
                 "Type": "image",
-                "filePath": ["/assets/Fridge_Bottom.png"],
+                "filePath": ["assets/Fridge_Bottom.png"],
                 "Position": [1000, 600],
                 "Scale": 10,
                 "Actions": [
@@ -23,7 +23,7 @@
             {
                 "Name": "FridgeTop",
                 "Type": "image",
-                "filePath": ["/assets/Fridge_Bottom.png"],
+                "filePath": ["assets/Fridge_Bottom.png"],
                 "State": 0,
                 "Position": [1000, 275],
                 "Rotation": 0,
@@ -42,7 +42,7 @@
             {
                 "Name": "ArrowBedroom",
                 "Type": "image",
-                "filePath": ["/assets/arrow.png"],
+                "filePath": ["assets/arrow.png"],
                 "Position": [1300, 300],
                 "Scale": 8,
                 "Actions": [
@@ -64,7 +64,7 @@
             {
                 "Name": "ArrowKitchen2",
                 "Type": "image",
-                "filePath": ["/assets/arrow_small.png"],
+                "filePath": ["assets/arrow_small.png"],
                 "Position": [760, 900],
                 "Rotation": 180,
                 "Scale": 8,
@@ -87,7 +87,7 @@
             {
                 "Name": "Stovetop",
                 "Type": "image",
-                "filePath": ["/assets/stovetop.png", "/assets/stovetop_empty_pan.png", "/assets/stovetop_ground_beef_pan.png", "/assets/stovetop_ground_beef_cooked_pan.png", "/assets/stovetop_ground_beef_milk_pan.png", "/assets/stovetop_ground_beef_milk_water_pan.png", "/assets/stovetop_ground_beef_milk_water_noodles_pan.png", "/assets/stovetop_gbeef_stroganoff_pan.png", "/assets/stovetop_empty_pan.png"],
+                "filePath": ["assets/stovetop.png", "assets/stovetop_empty_pan.png", "assets/stovetop_ground_beef_pan.png", "assets/stovetop_ground_beef_cooked_pan.png", "assets/stovetop_ground_beef_milk_pan.png", "assets/stovetop_ground_beef_milk_water_pan.png", "assets/stovetop_ground_beef_milk_water_noodles_pan.png", "assets/stovetop_gbeef_stroganoff_pan.png", "assets/stovetop_empty_pan.png"],
                 "State": 0,
                 "Position": [420, 420],
                 "Scale": 10,
@@ -269,7 +269,7 @@
             {
                 "Name": "Oven",
                 "Type": "image",
-                "filePath": ["/assets/oven.png", "/assets/oven_open.png"],
+                "filePath": ["assets/oven.png", "assets/oven_open.png"],
                 "State": 0,
                 "Position": [420, 610],
                 "Scale": 10,
@@ -326,7 +326,7 @@
             {
                 "Name": "kitchenCabinet1",
                 "Type": "image",
-                "filePath": ["/assets/kitchen_cabinet.png"],
+                "filePath": ["assets/kitchen_cabinet.png"],
                 "Position": [130, 610],
                 "Scale": 10,
                 "State": 0,
@@ -345,7 +345,7 @@
             {
                 "Name": "kitchenCabinet2",
                 "Type": "image",
-                "filePath": ["/assets/kitchen_cabinet.png"],
+                "filePath": ["assets/kitchen_cabinet.png"],
                 "Position": [710, 610],
                 "Scale": 10,
                 "State": 0,
@@ -364,7 +364,7 @@
             {
                 "Name": "myCabinet",
                 "Type": "image",
-                "filePath": ["/assets/kitchen_cabinet2.png", "/assets/kitchen_cabinet2_open.png"],
+                "filePath": ["assets/kitchen_cabinet2.png", "assets/kitchen_cabinet2_open.png"],
                 "Position": [130, 200],
                 "Scale": 10,
                 "State": 0,
@@ -395,7 +395,7 @@
             {
                 "Name": "boxOfFood",
                 "Type": "image",
-                "filePath": ["/assets/box_of_food.png"],
+                "filePath": ["assets/box_of_food.png"],
                 "Position": [160, 275],
                 "Scale": 10,
                 "State": 0,

@@ -5,7 +5,7 @@
             {
                 "Name": "desk",
                 "Type": "image",
-                "filePath": ["/assets/desk.png"],
+                "filePath": ["assets/desk.png"],
                 "Position": [900, 500],
                 "Scale": 10,
                 "Actions": [
@@ -31,7 +31,7 @@
             {
                 "Name": "beef stroganoff",
                 "Type": "image",
-                "filePath": ["/assets/dish.png"],
+                "filePath": ["assets/dish.png"],
                 "Position": [900, 330],
                 "Scale": 10,
                 "Visible": false
@@ -39,7 +39,7 @@
             {
                 "Name": "door",
                 "Type": "image",
-                "filePath": ["/assets/door.png"],
+                "filePath": ["assets/door.png"],
                 "Position": [250, 400],
                 "Scale": 15,
                 "Actions": [
