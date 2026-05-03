@@ -30,40 +30,45 @@ class PantryScene extends AdventureScene {
 
 class WinScene extends Phaser.Scene {
     constructor() {
-        super("WinScene")
+        super("WinScene");
     }
 
     preload() {
-        this.load.image("button", "assets/button.png")
+        this.load.image("button", "assets/button.png");
+        this.load.audio("winSound", "assets/audio/win_sound.mp3")
     }
 
     create() {
+        this.sound.stopAll();
+        this.sound.play("winSound");
         this.game.canvas.style.cursor = 'auto';
         const button = this.add.image(1000, 540, "button").setInteractive().setDisplaySize(600, 200);
         button.on('pointerdown', () => {
             window.location.reload();
         })
-        this.add.text(600, 300, "Thanks for playing!").setStyle({ fontSize: `70px`, color: '#eea' })
-        this.add.text(780, 500, "Play again?").setStyle({ fontSize: `70px`, color: '#eea' })
+        this.add.text(600, 300, "Thanks for playing!").setStyle({ fontSize: `70px`, color: '#eea' });
+        this.add.text(780, 500, "Play again?").setStyle({ fontSize: `70px`, color: '#eea' });
     }
 }
 
 class StartScene extends Phaser.Scene {
     constructor() {
-        super("StartScene")
+        super("StartScene");
     }
 
     preload() {
-        this.load.image("button", "assets/button.png")
+        this.load.image("button", "assets/button.png");
+        this.load.audio("backgroundMusic", "assets/audio/background_music.mp3");
     }
 
     create() {
         const button = this.add.image(960, 540, "button").setInteractive().setScale(10);
         button.on('pointerdown', () => {
+            this.sound.play("backgroundMusic");
             this.scene.start('Kitchen1');
         })
-        this.add.text(600, 300, "Goal: Make dinner").setStyle({ fontSize: `70px`, color: '#eea' })
-        this.add.text(880, 520, "Start?").setStyle({ fontSize: `50px`, color: '#eea' })
+        this.add.text(600, 300, "Goal: Make dinner").setStyle({ fontSize: `70px`, color: '#eea' });
+        this.add.text(880, 520, "Start?").setStyle({ fontSize: `50px`, color: '#eea' });
     }
 }
 
