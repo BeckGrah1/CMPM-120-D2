@@ -1,30 +1,30 @@
 class Kitchen1Scene extends AdventureScene {
     constructor() {
-        super("Kitchen1", "Kitchen West", "/json/kitchen1.json");
+        super("Kitchen1", "Kitchen West", "json/kitchen1.json");
     }
 }
 
 class FridgeScene extends AdventureScene {
     constructor() {
-        super("Fridge", "The Fridge", "/json/fridge.json");
+        super("Fridge", "The Fridge", "json/fridge.json");
     }
 }
 
 class Kitchen2Scene extends AdventureScene {
     constructor() {
-        super("Kitchen2", "Kitchen East", "/json/kitchen2.json");
+        super("Kitchen2", "Kitchen East", "json/kitchen2.json");
     }
 }
 
 class BedroomScene extends AdventureScene {
     constructor() {
-        super("Bedroom", "My room", "/json/bedroom.json");
+        super("Bedroom", "My room", "json/bedroom.json");
     }
 }
 
 class PantryScene extends AdventureScene {
     constructor() {
-        super("Pantry", "Pantry", "/json/pantry.json");
+        super("Pantry", "Pantry", "json/pantry.json");
     }
 }
 
