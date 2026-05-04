@@ -63,8 +63,11 @@ class StartScene extends Phaser.Scene {
 
     create() {
         const button = this.add.image(960, 540, "button").setInteractive().setScale(10);
+
         button.on('pointerdown', () => {
-            this.sound.play("backgroundMusic");
+            let music = this.sound.add("backgroundMusic");
+            music.setLoop(true);
+            music.play();
             this.scene.start('Kitchen1');
         })
         this.add.text(600, 300, "Goal: Make dinner").setStyle({ fontSize: `70px`, color: '#eea' });
