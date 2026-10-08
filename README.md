@@ -1,4 +1,5 @@
-A simple adventure game by {who?} based on a simple adventure game engine by [Adam Smith](https://github.com/rndmcnlly).
+A simple adventure game by Beck Grah based on a simple adventure game engine by [Adam Smith](https://github.com/rndmcnlly).
+Playable here: https://beckgrah.itch.io/cooking-as-a-college-student
 
 Code requirements:
 - **4+ scenes based on `AdventureScene`**:
